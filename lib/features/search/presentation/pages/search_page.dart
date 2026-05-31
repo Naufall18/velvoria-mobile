@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:Velvoria/core/theme/app_colors.dart';
+import 'package:velvoria/core/theme/app_colors.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});

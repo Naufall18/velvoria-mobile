@@ -71,3 +71,9 @@ final productsProvider =
 final featuredProductsProvider = FutureProvider<List<Product>>((ref) async {
   return ref.watch(productRepositoryProvider).fetchFeatured();
 });
+
+/// A single product looked up by slug (for the detail page).
+final productDetailProvider =
+    FutureProvider.family<Product, String>((ref, slug) async {
+  return ref.watch(productRepositoryProvider).fetchBySlug(slug);
+});

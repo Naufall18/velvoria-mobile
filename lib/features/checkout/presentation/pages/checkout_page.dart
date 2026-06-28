@@ -54,8 +54,9 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
             notes: _notes.text.trim(),
           );
 
-      // Backend clears the cart on success; sync local state.
+      // Backend clears the cart on success; sync local state and order history.
       await ref.read(cartControllerProvider.notifier).refresh();
+      ref.invalidate(ordersProvider);
 
       if (!mounted) return;
       await showDialog<void>(

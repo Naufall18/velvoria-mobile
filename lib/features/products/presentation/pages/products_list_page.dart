@@ -132,27 +132,31 @@ class _ProductCardState extends ConsumerState<_ProductCard> {
   @override
   Widget build(BuildContext context) {
     final p = widget.product;
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.grey200),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius:
-                const BorderRadius.vertical(top: Radius.circular(16)),
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: p.imageUrl != null
-                  ? Image.network(p.imageUrl!,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => const _Fallback())
-                  : const _Fallback(),
+    return InkWell(
+      onTap: () => context.pushNamed('productDetail',
+          pathParameters: {'slug': p.slug}),
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.grey200),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(16)),
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: p.imageUrl != null
+                    ? Image.network(p.imageUrl!,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => const _Fallback())
+                    : const _Fallback(),
+              ),
             ),
-          ),
           Padding(
             padding: const EdgeInsets.all(10),
             child: Column(
@@ -205,6 +209,7 @@ class _ProductCardState extends ConsumerState<_ProductCard> {
             ),
           ),
         ],
+        ),
       ),
     );
   }

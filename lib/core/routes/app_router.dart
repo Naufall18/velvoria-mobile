@@ -4,6 +4,7 @@ import '../../features/splash/presentation/pages/splash_page.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import '../../features/home/presentation/pages/main_shell.dart';
 import '../../features/products/presentation/pages/products_list_page.dart';
+import '../../features/products/presentation/pages/product_detail_page.dart';
 import '../../features/cart/presentation/pages/cart_page.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
@@ -52,6 +53,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/products',
         name: 'products',
         builder: (context, state) => const ProductsListPage(),
+      ),
+      GoRoute(
+        path: '/product/:slug',
+        name: 'productDetail',
+        builder: (context, state) =>
+            ProductDetailPage(slug: state.pathParameters['slug']!),
       ),
       GoRoute(
         path: '/cart',

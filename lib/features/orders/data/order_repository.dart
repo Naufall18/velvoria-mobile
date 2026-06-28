@@ -2,9 +2,19 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/network/api_client.dart';
 import '../../../core/utils/logger.dart';
+import 'order_model.dart';
 
 final orderRepositoryProvider = Provider<OrderRepository>((ref) {
   return OrderRepository(ref.watch(apiClientProvider));
+});
+
+/// The authenticated user's orders, newest first.
+final ordersProvider = FutureProvider<List<OrderModel>>((ref) async {
+  final raw = await ref.watch(orderRepositoryProvider).fetchOrders();
+  return raw
+      .whereType<Map<String, dynamic>>()
+      .map(OrderModel.fromJson)
+      .toList();
 });
 
 class OrderRepository {

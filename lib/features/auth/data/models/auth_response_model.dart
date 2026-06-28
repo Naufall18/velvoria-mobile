@@ -1,3 +1,6 @@
+// @JsonKey is applied to constructor parameters (Freezed pattern); the analyzer
+// flags this as invalid_annotation_target even though codegen handles it correctly.
+// ignore_for_file: invalid_annotation_target
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'user_model.dart';
 

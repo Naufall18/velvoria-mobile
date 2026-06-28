@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import '../../features/home/presentation/pages/main_shell.dart';
+import '../../features/products/presentation/pages/products_list_page.dart';
+import '../../features/cart/presentation/pages/cart_page.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/search/presentation/pages/search_page.dart';
@@ -45,6 +47,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/home',
         name: 'home',
         builder: (context, state) => const MainShell(),
+      ),
+      GoRoute(
+        path: '/products',
+        name: 'products',
+        builder: (context, state) => const ProductsListPage(),
+      ),
+      GoRoute(
+        path: '/cart',
+        name: 'cart',
+        builder: (context, state) => const CartPage(),
       ),
       GoRoute(
         path: '/search',

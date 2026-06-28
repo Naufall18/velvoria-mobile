@@ -1,17 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/currency.dart';
+import '../../data/cart_model.dart';
+import '../cart_controller.dart';
 
-class CartPage extends StatelessWidget {
+class CartPage extends ConsumerWidget {
   const CartPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cartAsync = ref.watch(cartControllerProvider);
+    final total = ref.watch(cartTotalProvider);
+    final count = ref.watch(cartCountProvider);
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
           children: [
-            // Header
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
               child: Row(
@@ -23,153 +31,112 @@ class CartPage extends StatelessWidget {
                             fontWeight: FontWeight.w700,
                             color: AppColors.primary)),
                   ),
-                  Text('3 items',
-                      style: TextStyle(
+                  Text('$count items',
+                      style: const TextStyle(
                           fontSize: 13, color: AppColors.textSecondary)),
                 ],
               ),
             ),
             const SizedBox(height: 16),
-            // Cart Items
             Expanded(
-              child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                children: [
-                  // Seller Group 1
-                  _buildSellerGroup('LUXE BRAND Store', [
-                    _CartItemData('Classic Leather Bag', '\$1,299', 1,
-                        Icons.luggage_rounded),
-                    _CartItemData('Silk Scarf', '\$380', 2,
-                        Icons.checkroom_rounded),
-                  ]),
-                  const SizedBox(height: 16),
-                  // Seller Group 2
-                  _buildSellerGroup('Diamond Gallery', [
-                    _CartItemData('Gold Necklace', '\$2,100', 1,
-                        Icons.diamond_rounded),
-                  ]),
-                  const SizedBox(height: 16),
-                  // Voucher
-                  _buildVoucherInput(),
-                  const SizedBox(height: 16),
-                  // Price Summary
-                  _buildPriceSummary(),
-                  const SizedBox(height: 100),
-                ],
+              child: cartAsync.when(
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (e, _) => _ErrorState(
+                  onRetry: () =>
+                      ref.read(cartControllerProvider.notifier).refresh(),
+                ),
+                data: (items) {
+                  if (items.isEmpty) return const _EmptyCart();
+                  return RefreshIndicator(
+                    onRefresh: () =>
+                        ref.read(cartControllerProvider.notifier).refresh(),
+                    child: ListView.separated(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      itemCount: items.length,
+                      separatorBuilder: (_, __) => const SizedBox(height: 12),
+                      itemBuilder: (context, i) => _CartTile(item: items[i]),
+                    ),
+                  );
+                },
               ),
             ),
+            if (cartAsync.asData?.value.isNotEmpty ?? false)
+              _CheckoutBar(total: total),
           ],
         ),
       ),
-      bottomSheet: _buildCheckoutBar(context),
     );
   }
+}
 
-  Widget _buildSellerGroup(String seller, List<_CartItemData> items) {
+class _CartTile extends ConsumerWidget {
+  const _CartTile({required this.item});
+  final CartItem item;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final notifier = ref.read(cartControllerProvider.notifier);
     return Container(
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 8,
-              offset: const Offset(0, 2))
-        ],
+        border: Border.all(color: AppColors.grey200),
       ),
-      child: Column(
-        children: [
-          // Seller header
-          Padding(
-            padding: const EdgeInsets.fromLTRB(14, 14, 14, 0),
-            child: Row(
-              children: [
-                Container(
-                  width: 28,
-                  height: 28,
-                  decoration: BoxDecoration(
-                    color: AppColors.primary,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Icon(Icons.storefront_rounded,
-                      color: Colors.white, size: 16),
-                ),
-                const SizedBox(width: 8),
-                Text(seller,
-                    style: const TextStyle(
-                        fontSize: 13, fontWeight: FontWeight.w600)),
-                const SizedBox(width: 6),
-                const Icon(Icons.verified_rounded,
-                    size: 14, color: AppColors.accent),
-              ],
-            ),
-          ),
-          const Divider(height: 20),
-          // Items
-          ...items.map((item) => _buildCartItem(item)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCartItem(_CartItemData item) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Product image
-          Container(
-            width: 80,
-            height: 80,
-            decoration: BoxDecoration(
-              color: AppColors.grey100,
-              borderRadius: BorderRadius.circular(12),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: SizedBox(
+              width: 64,
+              height: 64,
+              child: item.product.imageUrl != null
+                  ? Image.network(item.product.imageUrl!,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => const _ImageFallback())
+                  : const _ImageFallback(),
             ),
-            child: Icon(item.icon, size: 32, color: AppColors.grey400),
           ),
           const SizedBox(width: 12),
-          // Product info
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(item.name,
+                Text(item.product.name,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.w600)),
-                const SizedBox(height: 2),
-                Text('Size: M • Color: Black',
-                    style:
-                        TextStyle(fontSize: 11, color: AppColors.grey500)),
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textPrimary)),
+                const SizedBox(height: 4),
+                Text(Currency.idr(item.product.price),
+                    style: const TextStyle(
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.w700)),
                 const SizedBox(height: 8),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(item.price,
-                        style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.primary)),
-                    // Quantity
-                    Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.grey100,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        children: [
-                          _qtyBtn(Icons.remove, () {}),
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 12),
-                            child: Text('${item.qty}',
-                                style: const TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600)),
-                          ),
-                          _qtyBtn(Icons.add, () {}),
-                        ],
-                      ),
+                    _QtyButton(
+                      icon: Icons.remove,
+                      onTap: () =>
+                          notifier.updateQuantity(item.id, item.quantity - 1),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Text('${item.quantity}',
+                          style:
+                              const TextStyle(fontWeight: FontWeight.w600)),
+                    ),
+                    _QtyButton(
+                      icon: Icons.add,
+                      onTap: () =>
+                          notifier.updateQuantity(item.id, item.quantity + 1),
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      icon: const Icon(Icons.delete_outline,
+                          color: AppColors.error),
+                      onPressed: () => notifier.remove(item.id),
                     ),
                   ],
                 ),
@@ -180,181 +147,122 @@ class CartPage extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _qtyBtn(IconData icon, VoidCallback onTap) {
-    return GestureDetector(
+class _QtyButton extends StatelessWidget {
+  const _QtyButton({required this.icon, required this.onTap});
+  final IconData icon;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
       onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
       child: Container(
-        width: 32,
-        height: 32,
+        padding: const EdgeInsets.all(4),
         decoration: BoxDecoration(
-          color: icon == Icons.add ? AppColors.primary : Colors.transparent,
-          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: AppColors.grey300),
+          borderRadius: BorderRadius.circular(8),
         ),
-        child: Icon(icon,
-            size: 16,
-            color: icon == Icons.add ? Colors.white : AppColors.grey700),
-      ),
-    );
-  }
-
-  Widget _buildVoucherInput() {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 8,
-              offset: const Offset(0, 2))
-        ],
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.confirmation_num_rounded,
-              color: AppColors.accent, size: 22),
-          const SizedBox(width: 10),
-          const Expanded(
-            child: Text('Apply promo code',
-                style: TextStyle(fontSize: 13, color: AppColors.grey500)),
-          ),
-          Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-            decoration: BoxDecoration(
-              color: AppColors.primary,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: const Text('Apply',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600)),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPriceSummary() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 8,
-              offset: const Offset(0, 2))
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Order Summary',
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
-          const SizedBox(height: 12),
-          _priceRow('Subtotal', '\$3,779.00'),
-          _priceRow('Shipping', '\$15.00'),
-          _priceRow('Discount', '-\$200.00', isDiscount: true),
-          _priceRow('Tax', '\$56.69'),
-          const Divider(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text('Total',
-                  style: TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.w700)),
-              Text('\$3,650.69',
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.primary)),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _priceRow(String label, String value, {bool isDiscount = false}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label,
-              style: TextStyle(fontSize: 13, color: AppColors.grey600)),
-          Text(value,
-              style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                  color: isDiscount ? AppColors.success : AppColors.textPrimary)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCheckoutBar(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
-              blurRadius: 20,
-              offset: const Offset(0, -4))
-        ],
-      ),
-      child: SafeArea(
-        child: Row(
-          children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text('Total',
-                    style:
-                        TextStyle(fontSize: 12, color: AppColors.grey500)),
-                Text('\$3,650.69',
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.primary)),
-              ],
-            ),
-            const SizedBox(width: 20),
-            Expanded(
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14)),
-                  elevation: 0,
-                ),
-                child: const Text('Checkout',
-                    style:
-                        TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-              ),
-            ),
-          ],
-        ),
+        child: Icon(icon, size: 16, color: AppColors.textPrimary),
       ),
     );
   }
 }
 
-class _CartItemData {
-  final String name;
-  final String price;
-  final int qty;
-  final IconData icon;
-  const _CartItemData(this.name, this.price, this.qty, this.icon);
+class _ImageFallback extends StatelessWidget {
+  const _ImageFallback();
+  @override
+  Widget build(BuildContext context) => Container(
+        color: AppColors.grey100,
+        child: const Icon(Icons.image_outlined, color: AppColors.grey400),
+      );
+}
+
+class _CheckoutBar extends StatelessWidget {
+  const _CheckoutBar({required this.total});
+  final double total;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+      decoration: const BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        boxShadow: [BoxShadow(color: Color(0x14000000), blurRadius: 12)],
+      ),
+      child: Row(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Total',
+                  style: TextStyle(
+                      fontSize: 12, color: AppColors.textSecondary)),
+              Text(Currency.idr(total),
+                  style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.primary)),
+            ],
+          ),
+          const Spacer(),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+            ),
+            onPressed: () => context.pushNamed('checkout'),
+            child: const Text('Checkout'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _EmptyCart extends StatelessWidget {
+  const _EmptyCart();
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.shopping_cart_outlined,
+              size: 64, color: AppColors.grey400),
+          SizedBox(height: 12),
+          Text('Your cart is empty',
+              style: TextStyle(color: AppColors.textSecondary)),
+        ],
+      ),
+    );
+  }
+}
+
+class _ErrorState extends StatelessWidget {
+  const _ErrorState({required this.onRetry});
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.error_outline, size: 48, color: AppColors.error),
+          const SizedBox(height: 8),
+          const Text('Failed to load cart'),
+          const SizedBox(height: 8),
+          TextButton(onPressed: onRetry, child: const Text('Retry')),
+        ],
+      ),
+    );
+  }
 }

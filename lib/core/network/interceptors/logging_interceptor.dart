@@ -9,7 +9,7 @@ class LoggingInterceptor extends Interceptor {
       'REQUEST[${options.method}] => PATH: ${options.path}',
       tag: 'HTTP',
     );
-    Logger.debug('Headers: ${options.headers}', tag: 'HTTP');
+    Logger.debug('Headers: ${_redactHeaders(options.headers)}', tag: 'HTTP');
     Logger.debug('Query Parameters: ${options.queryParameters}', tag: 'HTTP');
     if (options.data != null) {
       Logger.debug('Body: ${options.data}', tag: 'HTTP');
@@ -42,5 +42,17 @@ class LoggingInterceptor extends Interceptor {
     }
 
     handler.next(err);
+  }
+
+  /// Mask sensitive headers (e.g. the Bearer token) before logging so tokens
+  /// never leak into device logs.
+  Map<String, dynamic> _redactHeaders(Map<String, dynamic> headers) {
+    const sensitive = {'authorization', 'cookie', 'set-cookie'};
+    return headers.map((key, value) {
+      if (sensitive.contains(key.toLowerCase())) {
+        return MapEntry(key, '***REDACTED***');
+      }
+      return MapEntry(key, value);
+    });
   }
 }

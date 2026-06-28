@@ -55,6 +55,17 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   AuthRemoteDataSourceImpl(this._apiClient);
 
+  /// Maps the backend auth payload ({user, token, token_type}) onto the shape
+  /// expected by AuthResponseModel ({user, access_token, ...}).
+  Map<String, dynamic> _normalizeAuth(Map<String, dynamic> data) {
+    return {
+      'user': data['user'],
+      'access_token': data['token'] ?? data['access_token'],
+      'refresh_token': data['refresh_token'],
+      'token_type': data['token_type'],
+    };
+  }
+
   @override
   Future<AuthResponseModel> login({
     required String email,
@@ -64,7 +75,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       Logger.debug('Login request for email: $email', tag: 'AuthDataSource');
 
       final response = await _apiClient.post(
-        '/auth/login',
+        '/login',
         data: {
           'email': email,
           'password': password,
@@ -72,7 +83,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
 
       Logger.debug('Login successful', tag: 'AuthDataSource');
-      return AuthResponseModel.fromJson(response.data['data']);
+      return AuthResponseModel.fromJson(_normalizeAuth(response.data['data']));
     } on DioException catch (e) {
       Logger.error(
         'Login failed',
@@ -94,17 +105,18 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       Logger.debug('Register request for email: $email', tag: 'AuthDataSource');
 
       final response = await _apiClient.post(
-        '/auth/register',
+        '/register',
         data: {
           'email': email,
           'password': password,
+          'password_confirmation': password,
           'name': name,
-          if (phoneNumber != null) 'phone_number': phoneNumber,
+          if (phoneNumber != null) 'phone': phoneNumber,
         },
       );
 
       Logger.debug('Registration successful', tag: 'AuthDataSource');
-      return AuthResponseModel.fromJson(response.data['data']);
+      return AuthResponseModel.fromJson(_normalizeAuth(response.data['data']));
     } on DioException catch (e) {
       Logger.error(
         'Registration failed',
@@ -120,7 +132,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       Logger.debug('Logout request', tag: 'AuthDataSource');
 
-      await _apiClient.post('/auth/logout');
+      await _apiClient.post('/logout');
 
       Logger.debug('Logout successful', tag: 'AuthDataSource');
     } on DioException catch (e) {
@@ -138,10 +150,13 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       Logger.debug('Get current user request', tag: 'AuthDataSource');
 
-      final response = await _apiClient.get('/auth/me');
+      final response = await _apiClient.get('/me');
 
       Logger.debug('Get current user successful', tag: 'AuthDataSource');
-      return UserModel.fromJson(response.data['data']);
+      // Backend shape: { data: { user: {...} } }
+      final data = response.data['data'];
+      final userJson = (data is Map && data['user'] != null) ? data['user'] : data;
+      return UserModel.fromJson(userJson as Map<String, dynamic>);
     } on DioException catch (e) {
       Logger.error(
         'Get current user failed',

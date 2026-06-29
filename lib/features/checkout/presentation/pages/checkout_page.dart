@@ -62,9 +62,9 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
       await showDialog<void>(
         context: context,
         builder: (_) => AlertDialog(
-          title: const Text('Order placed'),
+          title: const Text('Pesanan dibuat'),
           content: const Text(
-              'Your COD order has been created. Please prepare cash on delivery.'),
+              'Pesanan COD Anda berhasil dibuat. Mohon siapkan uang tunai saat pengiriman.'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -87,9 +87,9 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
 
   String _errorMessage(Object e) {
     final s = e.toString();
-    if (s.contains('Insufficient stock')) return 'Insufficient stock for an item.';
-    if (s.contains('Cart is empty')) return 'Your cart is empty.';
-    return 'Failed to place order. Please try again.';
+    if (s.contains('Insufficient stock')) return 'Stok salah satu produk tidak mencukupi.';
+    if (s.contains('Cart is empty')) return 'Keranjang Anda kosong.';
+    return 'Gagal membuat pesanan. Silakan coba lagi.';
   }
 
   @override
@@ -115,34 +115,34 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            const _SectionTitle('Shipping Address'),
-            _field(_name, 'Recipient name'),
-            _field(_phone, 'Phone number', keyboard: TextInputType.phone),
-            _field(_address, 'Address', maxLines: 2),
+            const _SectionTitle('Alamat Pengiriman'),
+            _field(_name, 'Nama penerima'),
+            _field(_phone, 'Nomor telepon', keyboard: TextInputType.phone),
+            _field(_address, 'Alamat', maxLines: 2),
             Row(
               children: [
-                Expanded(child: _field(_city, 'City')),
+                Expanded(child: _field(_city, 'Kota')),
                 const SizedBox(width: 12),
-                Expanded(child: _field(_province, 'Province')),
+                Expanded(child: _field(_province, 'Provinsi')),
               ],
             ),
-            _field(_postal, 'Postal code', keyboard: TextInputType.number),
-            _field(_notes, 'Notes (optional)', required: false, maxLines: 2),
+            _field(_postal, 'Kode pos', keyboard: TextInputType.number),
+            _field(_notes, 'Catatan (opsional)', required: false, maxLines: 2),
             const SizedBox(height: 8),
-            const _SectionTitle('Payment Method'),
+            const _SectionTitle('Metode Pembayaran'),
             _PaymentTile(
               selected: _paymentMethod == 'cod',
               icon: Icons.money,
-              title: 'Cash on Delivery (COD)',
-              subtitle: 'Pay with cash when your order arrives',
+              title: 'Bayar di Tempat (COD)',
+              subtitle: 'Bayar tunai saat pesanan tiba',
               onTap: () => setState(() => _paymentMethod = 'cod'),
             ),
             const _PaymentTile(
               selected: false,
               enabled: false,
               icon: Icons.credit_card,
-              title: 'Online Payment (Midtrans)',
-              subtitle: 'Coming soon',
+              title: 'Pembayaran Online (Midtrans)',
+              subtitle: 'Segera hadir',
             ),
           ],
         ),
@@ -178,7 +178,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
           ),
         ),
         validator: required
-            ? (v) => (v == null || v.trim().isEmpty) ? '$label is required' : null
+            ? (v) => (v == null || v.trim().isEmpty) ? '$label wajib diisi' : null
             : null,
       ),
     );
@@ -315,7 +315,7 @@ class _BottomBar extends StatelessWidget {
                       child: CircularProgressIndicator(
                           strokeWidth: 2, color: Colors.white),
                     )
-                  : const Text('Place Order'),
+                  : const Text('Buat Pesanan'),
             ),
           ],
         ),

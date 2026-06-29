@@ -25,13 +25,13 @@ class CartPage extends ConsumerWidget {
               child: Row(
                 children: [
                   const Expanded(
-                    child: Text('Shopping Cart',
+                    child: Text('Keranjang',
                         style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w700,
                             color: AppColors.primary)),
                   ),
-                  Text('$count items',
+                  Text('$count item',
                       style: const TextStyle(
                           fontSize: 13, color: AppColors.textSecondary)),
                 ],
@@ -238,7 +238,7 @@ class _EmptyCart extends StatelessWidget {
           Icon(Icons.shopping_cart_outlined,
               size: 64, color: AppColors.grey400),
           SizedBox(height: 12),
-          Text('Your cart is empty',
+          Text('Keranjang Anda kosong',
               style: TextStyle(color: AppColors.textSecondary)),
         ],
       ),
@@ -258,9 +258,9 @@ class _ErrorState extends StatelessWidget {
         children: [
           const Icon(Icons.error_outline, size: 48, color: AppColors.error),
           const SizedBox(height: 8),
-          const Text('Failed to load cart'),
+          const Text('Gagal memuat keranjang'),
           const SizedBox(height: 8),
-          TextButton(onPressed: onRetry, child: const Text('Retry')),
+          TextButton(onPressed: onRetry, child: const Text('Coba lagi')),
         ],
       ),
     );

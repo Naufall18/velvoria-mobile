@@ -18,12 +18,12 @@ class _OrderHistoryPageState extends ConsumerState<OrderHistoryPage>
 
   // (label, status key — null means "All")
   static const _tabs = <(String, String?)>[
-    ('All', null),
-    ('Pending', 'pending'),
-    ('Processing', 'processing'),
-    ('Shipped', 'shipped'),
-    ('Delivered', 'delivered'),
-    ('Cancelled', 'cancelled'),
+    ('Semua', null),
+    ('Menunggu', 'pending'),
+    ('Diproses', 'processing'),
+    ('Dikirim', 'shipped'),
+    ('Selesai', 'delivered'),
+    ('Dibatalkan', 'cancelled'),
   ];
 
   @override
@@ -51,7 +51,7 @@ class _OrderHistoryPageState extends ConsumerState<OrderHistoryPage>
           icon: const Icon(Icons.arrow_back_ios, color: AppColors.textPrimary),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text('My Orders',
+        title: const Text('Pesanan Saya',
             style: TextStyle(
                 color: AppColors.textPrimary, fontWeight: FontWeight.bold)),
         centerTitle: true,
@@ -82,10 +82,10 @@ class _OrderHistoryPageState extends ConsumerState<OrderHistoryPage>
               const Icon(Icons.error_outline,
                   size: 48, color: AppColors.error),
               const SizedBox(height: 8),
-              const Text('Failed to load orders'),
+              const Text('Gagal memuat pesanan'),
               TextButton(
                 onPressed: () => ref.invalidate(ordersProvider),
-                child: const Text('Retry'),
+                child: const Text('Coba lagi'),
               ),
             ],
           ),
@@ -154,7 +154,7 @@ class _OrderCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          Text('${order.itemCount} item(s)'
+          Text('${order.itemCount} item'
               '${order.paymentMethod != null ? ' · ${order.paymentMethod!.toUpperCase()}' : ''}',
               style: const TextStyle(
                   fontSize: 12, color: AppColors.textSecondary)),
@@ -184,18 +184,18 @@ class _OrderCard extends StatelessWidget {
   (String, Color) _statusStyle(String status) {
     switch (status) {
       case 'pending':
-        return ('Pending', AppColors.info);
+        return ('Menunggu', AppColors.info);
       case 'confirmed':
       case 'processing':
-        return ('Processing', AppColors.warning);
+        return ('Diproses', AppColors.warning);
       case 'shipped':
-        return ('Shipped', AppColors.info);
+        return ('Dikirim', AppColors.info);
       case 'delivered':
-        return ('Delivered', AppColors.success);
+        return ('Selesai', AppColors.success);
       case 'cancelled':
-        return ('Cancelled', AppColors.error);
+        return ('Dibatalkan', AppColors.error);
       case 'refunded':
-        return ('Refunded', AppColors.error);
+        return ('Dikembalikan', AppColors.error);
       default:
         return (status, AppColors.textSecondary);
     }
@@ -215,7 +215,7 @@ class _EmptyState extends StatelessWidget {
           const Icon(Icons.receipt_long_outlined,
               size: 64, color: AppColors.grey400),
           const SizedBox(height: 12),
-          Text('No $label orders',
+          Text('Tidak ada pesanan $label',
               style: const TextStyle(color: AppColors.textSecondary)),
         ],
       ),

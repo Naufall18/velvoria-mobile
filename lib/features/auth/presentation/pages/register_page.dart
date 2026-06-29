@@ -90,7 +90,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
           'Join Velvoria and discover premium products',
           style: TextStyle(
             fontSize: 16,
-            color: AppColors.textSecondary.withOpacity(0.7),
+            color: AppColors.textSecondary.withValues(alpha: 0.7),
             height: 1.5,
           ),
         ),
@@ -107,7 +107,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
             height: 2,
             color: _currentStep >= 1
                 ? AppColors.primary
-                : AppColors.textSecondary.withOpacity(0.2),
+                : AppColors.textSecondary.withValues(alpha: 0.2),
           ),
         ),
         _stepDot(1, 'Security'),
@@ -128,7 +128,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
             border: Border.all(
               color: isActive
                   ? AppColors.primary
-                  : AppColors.textSecondary.withOpacity(0.3),
+                  : AppColors.textSecondary.withValues(alpha: 0.3),
               width: 2,
             ),
           ),

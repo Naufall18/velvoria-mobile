@@ -3,15 +3,15 @@ import '../error/failures.dart';
 
 /// Base use case interface
 /// All use cases should implement this interface
-abstract class UseCase<Type, Params> {
+abstract class UseCase<T, Params> {
   /// Execute the use case
-  Future<Either<Failure, Type>> call(Params params);
+  Future<Either<Failure, T>> call(Params params);
 }
 
 /// Use case with no parameters
-abstract class NoParamsUseCase<Type> {
+abstract class NoParamsUseCase<T> {
   /// Execute the use case
-  Future<Either<Failure, Type>> call();
+  Future<Either<Failure, T>> call();
 }
 
 /// No parameters class

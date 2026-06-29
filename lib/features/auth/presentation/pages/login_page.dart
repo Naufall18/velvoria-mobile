@@ -133,7 +133,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           'Sign in to continue your luxury shopping experience',
           style: TextStyle(
             fontSize: 16,
-            color: AppColors.textSecondary.withOpacity(0.7),
+            color: AppColors.textSecondary.withValues(alpha: 0.7),
             height: 1.5,
           ),
         ),
@@ -214,18 +214,18 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   Widget _buildDivider() {
     return Row(
       children: [
-        Expanded(child: Divider(color: AppColors.textSecondary.withOpacity(0.2))),
+        Expanded(child: Divider(color: AppColors.textSecondary.withValues(alpha: 0.2))),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             'Or continue with',
             style: TextStyle(
               fontSize: 14,
-              color: AppColors.textSecondary.withOpacity(0.6),
+              color: AppColors.textSecondary.withValues(alpha: 0.6),
             ),
           ),
         ),
-        Expanded(child: Divider(color: AppColors.textSecondary.withOpacity(0.2))),
+        Expanded(child: Divider(color: AppColors.textSecondary.withValues(alpha: 0.2))),
       ],
     );
   }
@@ -247,7 +247,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       child: Container(
         height: 56,
         decoration: BoxDecoration(
-          border: Border.all(color: AppColors.textSecondary.withOpacity(0.2)),
+          border: Border.all(color: AppColors.textSecondary.withValues(alpha: 0.2)),
           borderRadius: BorderRadius.circular(12),
           color: AppColors.surface,
         ),

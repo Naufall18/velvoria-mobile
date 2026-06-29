@@ -92,7 +92,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             hintText: widget.hint,
             hintStyle: TextStyle(
               fontSize: 16,
-              color: AppColors.textSecondary.withOpacity(0.6),
+              color: AppColors.textSecondary.withValues(alpha: 0.6),
             ),
             errorText: widget.errorText,
             prefixIcon: widget.prefixIcon,
@@ -112,7 +112,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             filled: true,
             fillColor: widget.enabled
                 ? AppColors.surface
-                : AppColors.textSecondary.withOpacity(0.1),
+                : AppColors.textSecondary.withValues(alpha: 0.1),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
               vertical: 16,
@@ -120,14 +120,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(
-                color: AppColors.textSecondary.withOpacity(0.2),
+                color: AppColors.textSecondary.withValues(alpha: 0.2),
                 width: 1,
               ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(
-                color: AppColors.textSecondary.withOpacity(0.2),
+                color: AppColors.textSecondary.withValues(alpha: 0.2),
                 width: 1,
               ),
             ),
@@ -155,7 +155,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
             disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(
-                color: AppColors.textSecondary.withOpacity(0.1),
+                color: AppColors.textSecondary.withValues(alpha: 0.1),
                 width: 1,
               ),
             ),

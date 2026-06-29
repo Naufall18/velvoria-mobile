@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../shared/widgets/buttons/primary_button.dart';
@@ -41,18 +42,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final authState = ref.watch(authProvider);
 
     ref.listen<AuthState>(authProvider, (prev, next) {
-      if (next.isAuthenticated) {
-        context.go('/home');
-      }
+      if (next.isAuthenticated) context.go('/home');
       if (next.error != null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(next.error!),
             backgroundColor: AppColors.error,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
         );
         ref.read(authProvider.notifier).clearError();
@@ -61,105 +58,107 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 40),
-                _buildHeader(),
-                const SizedBox(height: 40),
-                _buildEmailField(),
-                const SizedBox(height: 16),
-                _buildPasswordField(),
-                const SizedBox(height: 12),
-                _buildRememberForgot(),
-                const SizedBox(height: 32),
-                _buildLoginButton(authState),
-                const SizedBox(height: 24),
-                _buildDivider(),
-                const SizedBox(height: 24),
-                _buildSocialLogins(),
-                const SizedBox(height: 32),
-                _buildSignUpLink(),
-                const SizedBox(height: 24),
-              ],
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHero(),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 28, 24, 24),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Masuk ke Akun',
+                        style: GoogleFonts.playfairDisplay(
+                            fontSize: 26, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                    const SizedBox(height: 4),
+                    const Text('Masukkan email & kata sandi Anda untuk melanjutkan.',
+                        style: TextStyle(fontSize: 14, color: AppColors.textSecondary)),
+                    const SizedBox(height: 24),
+                    CustomTextField(
+                      label: 'Email',
+                      hint: 'anda@email.com',
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      prefixIcon: const Icon(Icons.email_outlined, color: AppColors.textSecondary),
+                      validator: Validators.email,
+                    ),
+                    const SizedBox(height: 16),
+                    CustomTextField(
+                      label: 'Kata Sandi',
+                      hint: 'Masukkan kata sandi',
+                      controller: _passwordController,
+                      obscureText: true,
+                      prefixIcon: const Icon(Icons.lock_outlined, color: AppColors.textSecondary),
+                      validator: Validators.password,
+                    ),
+                    const SizedBox(height: 12),
+                    _buildRememberForgot(),
+                    const SizedBox(height: 28),
+                    PrimaryButton(text: 'Masuk', isLoading: authState.isLoading, onPressed: _handleLogin),
+                    const SizedBox(height: 24),
+                    _buildDivider(),
+                    const SizedBox(height: 20),
+                    _buildSocialLogins(),
+                    const SizedBox(height: 28),
+                    _buildSignUpLink(),
+                    const SizedBox(height: 16),
+                  ],
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildHeader() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Logo
-        Container(
-          width: 60,
-          height: 60,
-          decoration: BoxDecoration(
-            color: AppColors.primary,
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: const Center(
-            child: Text(
-              'L',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'PlayfairDisplay',
+  Widget _buildHero() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(24, 72, 24, 32),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [AppColors.primary, Color(0xFF11152A)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(32)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                alignment: Alignment.center,
+                child: Text('V',
+                    style: GoogleFonts.playfairDisplay(
+                        color: AppColors.secondary, fontSize: 24, fontWeight: FontWeight.bold)),
               ),
-            ),
+              const SizedBox(width: 12),
+              Text('VELVORIA',
+                  style: GoogleFonts.playfairDisplay(
+                      color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold, letterSpacing: 1)),
+            ],
           ),
-        ),
-        const SizedBox(height: 24),
-        const Text(
-          'Welcome Back',
-          style: TextStyle(
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
-            color: AppColors.textPrimary,
-            fontFamily: 'PlayfairDisplay',
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          'Sign in to continue your luxury shopping experience',
-          style: TextStyle(
-            fontSize: 16,
-            color: AppColors.textSecondary.withValues(alpha: 0.7),
-            height: 1.5,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildEmailField() {
-    return CustomTextField(
-      label: 'Email Address',
-      hint: 'Enter your email',
-      controller: _emailController,
-      keyboardType: TextInputType.emailAddress,
-      prefixIcon: const Icon(Icons.email_outlined, color: AppColors.textSecondary),
-      validator: Validators.email,
-    );
-  }
-
-  Widget _buildPasswordField() {
-    return CustomTextField(
-      label: 'Password',
-      hint: 'Enter your password',
-      controller: _passwordController,
-      obscureText: true,
-      prefixIcon: const Icon(Icons.lock_outlined, color: AppColors.textSecondary),
-      validator: Validators.password,
+          const SizedBox(height: 28),
+          Text('Selamat datang\nkembali.',
+              style: GoogleFonts.playfairDisplay(
+                  color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold, height: 1.2)),
+          const SizedBox(height: 10),
+          Text('Lanjutkan pengalaman belanja mewah Anda bersama brand & vendor kelas dunia.',
+              style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 14, height: 1.5)),
+        ],
+      ),
     );
   }
 
@@ -176,38 +175,19 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 value: _rememberMe,
                 onChanged: (v) => setState(() => _rememberMe = v ?? false),
                 activeColor: AppColors.primary,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4),
-                ),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
               ),
             ),
             const SizedBox(width: 8),
-            const Text(
-              'Remember me',
-              style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
-            ),
+            const Text('Ingat saya', style: TextStyle(fontSize: 14, color: AppColors.textSecondary)),
           ],
         ),
         TextButton(
-          onPressed: () => context.push('/forgot-password'),
-          child: const Text(
-            'Forgot Password?',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: AppColors.primary,
-            ),
-          ),
+          onPressed: () {},
+          child: const Text('Lupa sandi?',
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.secondary)),
         ),
       ],
-    );
-  }
-
-  Widget _buildLoginButton(AuthState state) {
-    return PrimaryButton(
-      text: 'Sign In',
-      isLoading: state.isLoading,
-      onPressed: _handleLogin,
     );
   }
 
@@ -217,13 +197,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         Expanded(child: Divider(color: AppColors.textSecondary.withValues(alpha: 0.2))),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            'Or continue with',
-            style: TextStyle(
-              fontSize: 14,
-              color: AppColors.textSecondary.withValues(alpha: 0.6),
-            ),
-          ),
+          child: Text('atau lanjut dengan',
+              style: TextStyle(fontSize: 13, color: AppColors.textSecondary.withValues(alpha: 0.6))),
         ),
         Expanded(child: Divider(color: AppColors.textSecondary.withValues(alpha: 0.2))),
       ],
@@ -233,32 +208,30 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   Widget _buildSocialLogins() {
     return Row(
       children: [
-        _socialBtn(Icons.g_mobiledata, 'Google'),
+        _socialBtn(Icons.g_mobiledata),
         const SizedBox(width: 12),
-        _socialBtn(Icons.apple, 'Apple'),
+        _socialBtn(Icons.apple),
         const SizedBox(width: 12),
-        _socialBtn(Icons.facebook, 'Facebook'),
+        _socialBtn(Icons.facebook),
       ],
     );
   }
 
-  Widget _socialBtn(IconData icon, String label) {
+  Widget _socialBtn(IconData icon) {
     return Expanded(
       child: Container(
-        height: 56,
+        height: 54,
         decoration: BoxDecoration(
           border: Border.all(color: AppColors.textSecondary.withValues(alpha: 0.2)),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           color: AppColors.surface,
         ),
         child: Material(
           color: Colors.transparent,
           child: InkWell(
             onTap: () {},
-            borderRadius: BorderRadius.circular(12),
-            child: Center(
-              child: Icon(icon, size: 28, color: AppColors.textPrimary),
-            ),
+            borderRadius: BorderRadius.circular(16),
+            child: Center(child: Icon(icon, size: 28, color: AppColors.textPrimary)),
           ),
         ),
       ),
@@ -270,20 +243,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text(
-            "Don't have an account? ",
-            style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
-          ),
+          const Text('Belum punya akun? ',
+              style: TextStyle(fontSize: 14, color: AppColors.textSecondary)),
           GestureDetector(
             onTap: () => context.push('/register'),
-            child: const Text(
-              'Sign Up',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                color: AppColors.primary,
-              ),
-            ),
+            child: const Text('Daftar sekarang',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.primary)),
           ),
         ],
       ),

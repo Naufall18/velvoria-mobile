@@ -59,11 +59,20 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   /// expected by AuthResponseModel ({user, access_token, ...}).
   Map<String, dynamic> _normalizeAuth(Map<String, dynamic> data) {
     return {
-      'user': data['user'],
+      'user': _normalizeUser(data['user']),
       'access_token': data['token'] ?? data['access_token'],
       'refresh_token': data['refresh_token'],
       'token_type': data['token_type'],
     };
+  }
+
+  /// The backend user payload sends `id` as an int and omits `role`; UserModel
+  /// expects `id` as String and a required `role`. Reconcile here.
+  Map<String, dynamic> _normalizeUser(dynamic user) {
+    final map = Map<String, dynamic>.from(user as Map);
+    map['id'] = map['id']?.toString();
+    map['role'] = map['role'] ?? 'buyer';
+    return map;
   }
 
   @override
@@ -156,7 +165,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       // Backend shape: { data: { user: {...} } }
       final data = response.data['data'];
       final userJson = (data is Map && data['user'] != null) ? data['user'] : data;
-      return UserModel.fromJson(userJson as Map<String, dynamic>);
+      return UserModel.fromJson(_normalizeUser(userJson));
     } on DioException catch (e) {
       Logger.error(
         'Get current user failed',

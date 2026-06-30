@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:velvoria/core/theme/app_colors.dart';
+import 'package:velvoria/core/utils/currency.dart';
 
 class ChatListPage extends StatelessWidget {
   const ChatListPage({super.key});
@@ -7,25 +8,29 @@ class ChatListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final chats = [
-      {'name': 'LUXE Official Store', 'msg': 'Your order has been packaged! 📦', 'time': '2m', 'unread': 2, 'online': true},
-      {'name': 'Gucci Boutique', 'msg': 'Yes, we have size M available', 'time': '1h', 'unread': 0, 'online': true},
-      {'name': 'Hermès Gallery', 'msg': 'Thank you for your purchase!', 'time': '3h', 'unread': 0, 'online': false},
-      {'name': 'Customer Support', 'msg': 'Is there anything else I can help with?', 'time': '1d', 'unread': 1, 'online': true},
-      {'name': 'Prada Store', 'msg': 'The item will be restocked next week', 'time': '2d', 'unread': 0, 'online': false},
+      {'name': 'LUXE Official Store', 'msg': 'Pesanan Anda sudah dikemas! 📦', 'time': '2m', 'unread': 2, 'online': true},
+      {'name': 'Gucci Boutique', 'msg': 'Ya, kami punya ukuran M yang tersedia', 'time': '1j', 'unread': 0, 'online': true},
+      {'name': 'Hermès Gallery', 'msg': 'Terima kasih atas pembelian Anda!', 'time': '3j', 'unread': 0, 'online': false},
+      {'name': 'Dukungan Pelanggan', 'msg': 'Ada lagi yang bisa kami bantu?', 'time': '1h', 'unread': 1, 'online': true},
+      {'name': 'Prada Store', 'msg': 'Barang akan tersedia lagi minggu depan', 'time': '2h', 'unread': 0, 'online': false},
     ];
 
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: Colors.white, elevation: 0,
-        leading: IconButton(icon: const Icon(Icons.arrow_back_ios, color: AppColors.textPrimary), onPressed: () => Navigator.pop(context)),
-        title: const Text('Messages', style: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold)),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: AppColors.textPrimary),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: const Text('Pesan', style: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold)),
         centerTitle: true,
         actions: [IconButton(icon: const Icon(Icons.search, color: AppColors.textPrimary), onPressed: () {})],
       ),
       body: ListView.separated(
         itemCount: chats.length,
-        separatorBuilder: (_, __) => Divider(height: 1, indent: 80, color: AppColors.grey200),
+        separatorBuilder: (_, __) => const Divider(height: 1, indent: 80, color: AppColors.grey200),
         itemBuilder: (_, i) {
           final c = chats[i];
           return ListTile(
@@ -62,22 +67,26 @@ class ChatDetailPage extends StatefulWidget {
 class _ChatDetailPageState extends State<ChatDetailPage> {
   final _controller = TextEditingController();
   final _messages = <Map<String, dynamic>>[
-    {'text': 'Hi, is the Classic Leather Bag still available in brown?', 'isMe': true, 'time': '10:30 AM'},
-    {'text': 'Hello! Yes, we still have it in brown. Would you like to see more photos?', 'isMe': false, 'time': '10:32 AM'},
-    {'text': 'Yes please! Also, what\'s the delivery time to Jakarta?', 'isMe': true, 'time': '10:33 AM'},
-    {'text': 'Here are some additional photos. Delivery to Jakarta is 2-3 business days with JNE Express.', 'isMe': false, 'time': '10:35 AM'},
-    {'text': 'Your order has been packaged! 📦', 'isMe': false, 'time': '2:15 PM'},
+    {'text': 'Halo, apakah Tas Kulit Klasik masih tersedia warna cokelat?', 'isMe': true, 'time': '10.30'},
+    {'text': 'Halo! Ya, masih tersedia warna cokelat. Apakah Anda ingin melihat foto lainnya?', 'isMe': false, 'time': '10.32'},
+    {'text': 'Boleh dong! Lalu, berapa lama pengiriman ke Jakarta?', 'isMe': true, 'time': '10.33'},
+    {'text': 'Ini beberapa foto tambahan. Pengiriman ke Jakarta 2-3 hari kerja dengan JNE Express.', 'isMe': false, 'time': '10.35'},
+    {'text': 'Pesanan Anda sudah dikemas! 📦', 'isMe': false, 'time': '14.15'},
   ];
 
   @override
-  void dispose() { _controller.dispose(); super.dispose(); }
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: Colors.white, elevation: 0.5,
+        backgroundColor: Colors.white,
+        elevation: 0.5,
         leading: IconButton(icon: const Icon(Icons.arrow_back_ios, color: AppColors.textPrimary), onPressed: () => Navigator.pop(context)),
         title: Row(children: [
           CircleAvatar(radius: 18, backgroundColor: AppColors.primary.withValues(alpha: 0.1), child: Text(widget.sellerName[0], style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold))),
@@ -94,22 +103,22 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
       ),
       body: Column(
         children: [
-          // Product context card
+          // Kartu konteks produk
           Container(
             margin: const EdgeInsets.all(12),
             padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10), border: Border.all(color: AppColors.grey200)),
+            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.grey200)),
             child: Row(children: [
-              Container(width: 44, height: 44, decoration: BoxDecoration(color: AppColors.grey100, borderRadius: BorderRadius.circular(6)), child: const Icon(Icons.shopping_bag_outlined, size: 22, color: AppColors.grey400)),
+              Container(width: 44, height: 44, decoration: BoxDecoration(color: AppColors.grey100, borderRadius: BorderRadius.circular(8)), child: const Icon(Icons.shopping_bag_outlined, size: 22, color: AppColors.grey400)),
               const SizedBox(width: 10),
-              const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text('Classic Leather Bag', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
-                Text('Rp 12,500,000', style: TextStyle(fontSize: 12, color: AppColors.primary, fontWeight: FontWeight.bold)),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                const Text('Tas Kulit Klasik', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                Text(Currency.idr(12500000), style: const TextStyle(fontSize: 12, color: AppColors.primary, fontWeight: FontWeight.bold)),
               ])),
               const Icon(Icons.chevron_right, color: AppColors.grey400),
             ]),
           ),
-          // Messages
+          // Pesan
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -117,15 +126,15 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
               itemBuilder: (_, i) => _buildMessage(_messages[i]),
             ),
           ),
-          // Quick replies
+          // Balasan cepat
           SizedBox(
             height: 40,
             child: ListView(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 12),
-              children: ['Is this available?', 'What\'s the price?', 'Delivery time?', 'Can I negotiate?'].map((q) => Padding(
+              children: ['Masih tersedia?', 'Berapa harganya?', 'Lama pengiriman?', 'Bisa nego?'].map((q) => Padding(
                 padding: const EdgeInsets.only(right: 8),
-                child: ActionChip(label: Text(q, style: const TextStyle(fontSize: 11)), backgroundColor: Colors.white, side: BorderSide(color: AppColors.grey300), onPressed: () => setState(() { _controller.text = q; })),
+                child: ActionChip(label: Text(q, style: const TextStyle(fontSize: 11)), backgroundColor: Colors.white, side: const BorderSide(color: AppColors.grey300), onPressed: () => setState(() { _controller.text = q; })),
               )).toList(),
             ),
           ),
@@ -138,7 +147,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
               Expanded(child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14),
                 decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(24)),
-                child: TextField(controller: _controller, decoration: const InputDecoration(hintText: 'Type a message...', border: InputBorder.none, hintStyle: TextStyle(fontSize: 14))),
+                child: TextField(controller: _controller, decoration: const InputDecoration(hintText: 'Tulis pesan...', border: InputBorder.none, hintStyle: TextStyle(fontSize: 14))),
               )),
               const SizedBox(width: 8),
               Container(
@@ -146,7 +155,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                 decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle),
                 child: IconButton(icon: const Icon(Icons.send, color: Colors.white, size: 20), onPressed: () {
                   if (_controller.text.isNotEmpty) {
-                    setState(() { _messages.add({'text': _controller.text, 'isMe': true, 'time': 'Now'}); _controller.clear(); });
+                    setState(() { _messages.add({'text': _controller.text, 'isMe': true, 'time': 'Sekarang'}); _controller.clear(); });
                   }
                 }),
               ),

@@ -17,21 +17,21 @@ class _OnboardingPageState extends State<OnboardingPage> {
   static const _pages = [
     _OnboardingData(
       icon: Icons.diamond_rounded,
-      title: 'Discover Luxury',
-      subtitle: 'Explore curated collections from\npremium brands worldwide',
-      gradient: [AppColors.primary, Color(0xFF2A3158)],
+      title: 'Temukan Kemewahan',
+      subtitle: 'Jelajahi koleksi pilihan dari\nbrand premium di seluruh dunia',
+      gradient: [AppColors.primary, AppColors.grey800],
     ),
     _OnboardingData(
       icon: Icons.verified_rounded,
-      title: '100% Authentic',
-      subtitle: 'Every product is verified for\nauthenticity and quality',
-      gradient: [AppColors.accent, Color(0xFF1D4745)],
+      title: '100% Asli',
+      subtitle: 'Setiap produk diverifikasi\nkeaslian dan kualitasnya',
+      gradient: [AppColors.accent, AppColors.primary],
     ),
     _OnboardingData(
       icon: Icons.local_shipping_rounded,
-      title: 'Fast & Secure',
-      subtitle: 'Premium delivery with full\ninsurance and tracking',
-      gradient: [Color(0xFF8B2635), Color(0xFFB5454F)],
+      title: 'Cepat & Aman',
+      subtitle: 'Pengiriman premium dengan\nasuransi dan pelacakan penuh',
+      gradient: [AppColors.error, AppColors.secondary],
     ),
   ];
 
@@ -65,7 +65,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
               child: TextButton(
                 onPressed: () => context.go('/login'),
                 child: const Text(
-                  'Skip',
+                  'Lewati',
                   style: TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 15,
@@ -126,8 +126,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   ),
                   child: Text(
                     _currentPage == _pages.length - 1
-                        ? 'Get Started'
-                        : 'Next',
+                        ? 'Mulai'
+                        : 'Lanjut',
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,

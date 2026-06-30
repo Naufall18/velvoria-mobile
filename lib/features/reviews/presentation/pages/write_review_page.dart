@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 
-/// Screen for writing a product review with star rating and photo upload.
+/// Layar untuk menulis ulasan produk dengan rating bintang dan unggah foto.
 class WriteReviewPage extends StatefulWidget {
   const WriteReviewPage({super.key});
 
@@ -26,7 +26,7 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Write Review'),
+        title: const Text('Tulis Ulasan'),
         backgroundColor: Colors.white,
         foregroundColor: AppColors.primary,
         elevation: 0,
@@ -99,7 +99,7 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
                 ),
                 SizedBox(height: 2),
                 Text(
-                  'Medium, Steel',
+                  'Medium, Baja',
                   style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
                 ),
               ],
@@ -115,12 +115,12 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Your Rating',
+          'Rating Anda',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 8),
         const Text(
-          'Tap a star to rate this product',
+          'Ketuk bintang untuk menilai produk ini',
           style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
         ),
         const SizedBox(height: 16),
@@ -145,7 +145,7 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
             padding: const EdgeInsets.only(top: 8),
             child: Center(
               child: Text(
-                ['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'][_rating],
+                ['', 'Buruk', 'Cukup', 'Baik', 'Sangat Baik', 'Luar Biasa'][_rating],
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -163,7 +163,7 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Your Review',
+          'Ulasan Anda',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 12),
@@ -172,7 +172,7 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
           maxLines: 5,
           maxLength: 500,
           decoration: InputDecoration(
-            hintText: 'Share your experience with this product...',
+            hintText: 'Ceritakan pengalaman Anda dengan produk ini...',
             hintStyle: const TextStyle(color: AppColors.grey400, fontSize: 14),
             filled: true,
             fillColor: Colors.white,
@@ -200,12 +200,12 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Add Photos',
+          'Tambah Foto',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 4),
         const Text(
-          'Upload up to 5 photos (optional)',
+          'Unggah hingga 5 foto (opsional)',
           style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
         ),
         const SizedBox(height: 12),
@@ -238,7 +238,7 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
                       Icon(Icons.camera_alt_rounded, color: AppColors.grey500, size: 24),
                       SizedBox(height: 4),
                       Text(
-                        'Add',
+                        'Tambah',
                         style: TextStyle(fontSize: 10, color: AppColors.grey500),
                       ),
                     ],
@@ -303,9 +303,9 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Post Anonymously', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                Text('Kirim secara Anonim', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                 Text(
-                  'Your name will be hidden from the review',
+                  'Nama Anda akan disembunyikan dari ulasan',
                   style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
                 ),
               ],
@@ -330,7 +330,7 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
         onPressed: enabled
             ? () {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Review submitted. Thank you!')),
+                  const SnackBar(content: Text('Ulasan terkirim. Terima kasih!')),
                 );
                 Navigator.of(context).pop();
               }
@@ -342,7 +342,7 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           elevation: 0,
         ),
-        child: const Text('Submit Review', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+        child: const Text('Kirim Ulasan', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
       ),
     );
   }

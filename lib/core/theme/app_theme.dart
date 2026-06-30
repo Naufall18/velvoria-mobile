@@ -6,7 +6,7 @@ class AppTheme {
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
-      colorScheme: ColorScheme.light(
+      colorScheme: const ColorScheme.light(
         primary: AppColors.primary,
         secondary: AppColors.secondary,
         surface: AppColors.surface,
@@ -23,7 +23,7 @@ class AppTheme {
   static ThemeData get darkTheme {
     return ThemeData(
       useMaterial3: true,
-      colorScheme: ColorScheme.dark(
+      colorScheme: const ColorScheme.dark(
         primary: AppColors.primary,
         secondary: AppColors.secondary,
         surface: AppColors.surfaceDark,
@@ -103,15 +103,15 @@ class AppTheme {
       fillColor: AppColors.surface,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: AppColors.grey300),
+        borderSide: const BorderSide(color: AppColors.grey300),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: AppColors.grey300),
+        borderSide: const BorderSide(color: AppColors.grey300),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: AppColors.primary, width: 2),
+        borderSide: const BorderSide(color: AppColors.primary, width: 2),
       ),
     );
   }

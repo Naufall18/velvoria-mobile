@@ -31,9 +31,9 @@ class ProfilePage extends ConsumerWidget {
             ]),
             const SizedBox(height: 16),
             _buildMenuSection(context, 'Hadiah', [
-              _MenuItem(Icons.workspace_premium_rounded, 'Program Loyalitas', 'Member Platinum', null),
-              _MenuItem(Icons.confirmation_num_rounded, 'Voucher & Kupon', 'Segera hadir', null),
-              _MenuItem(Icons.card_giftcard_rounded, 'Undang Teman', 'Dapatkan hadiah per referral', null),
+              const _MenuItem(Icons.workspace_premium_rounded, 'Program Loyalitas', 'Member Platinum', null),
+              const _MenuItem(Icons.confirmation_num_rounded, 'Voucher & Kupon', 'Segera hadir', null),
+              const _MenuItem(Icons.card_giftcard_rounded, 'Undang Teman', 'Dapatkan hadiah per referral', null),
             ]),
             const SizedBox(height: 16),
             _buildMenuSection(context, 'Bantuan', [
@@ -192,7 +192,7 @@ class ProfilePage extends ConsumerWidget {
                               const SnackBar(content: Text('Fitur segera hadir')),
                             ),
                   ),
-                  if (i < items.length - 1) Divider(height: 0, indent: 64, color: AppColors.grey200),
+                  if (i < items.length - 1) const Divider(height: 0, indent: 64, color: AppColors.grey200),
                 ],
               );
             }).toList(),

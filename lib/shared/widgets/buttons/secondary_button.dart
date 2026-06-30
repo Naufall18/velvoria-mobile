@@ -30,14 +30,14 @@ class SecondaryButton extends StatelessWidget {
         onPressed: isLoading ? null : onPressed,
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.primary,
-          side: BorderSide(color: AppColors.primary, width: 1.5),
+          side: const BorderSide(color: AppColors.primary, width: 1.5),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         ),
         child: isLoading
-            ? SizedBox(
+            ? const SizedBox(
                 height: 20,
                 width: 20,
                 child: CircularProgressIndicator(

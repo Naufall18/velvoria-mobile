@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 
-/// Help Center with FAQ categories, search, and contact options.
+/// Pusat Bantuan dengan kategori FAQ, pencarian, dan opsi kontak.
 class HelpCenterPage extends StatefulWidget {
   const HelpCenterPage({super.key});
 
@@ -24,7 +24,7 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Help Center'),
+        title: const Text('Pusat Bantuan'),
         backgroundColor: Colors.white,
         foregroundColor: AppColors.primary,
         elevation: 0,
@@ -60,7 +60,7 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
       child: TextField(
         controller: _searchController,
         decoration: InputDecoration(
-          hintText: 'Search for help...',
+          hintText: 'Cari bantuan...',
           hintStyle: const TextStyle(color: AppColors.grey400, fontSize: 14),
           prefixIcon: const Icon(Icons.search_rounded, color: AppColors.grey400),
           border: OutlineInputBorder(
@@ -77,19 +77,19 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
 
   Widget _buildCategoryGrid() {
     const categories = [
-      _HelpCategory(Icons.shopping_bag_rounded, 'Orders', Color(0xFF4A90D9)),
-      _HelpCategory(Icons.payment_rounded, 'Payments', Color(0xFF7FA99B)),
-      _HelpCategory(Icons.local_shipping_rounded, 'Shipping', Color(0xFFE8B4A0)),
-      _HelpCategory(Icons.assignment_return_rounded, 'Returns', Color(0xFF8B2635)),
-      _HelpCategory(Icons.account_circle_rounded, 'Account', Color(0xFF2D5F5D)),
-      _HelpCategory(Icons.security_rounded, 'Security', Color(0xFF1A1F3A)),
+      _HelpCategory(Icons.shopping_bag_rounded, 'Pesanan', AppColors.info),
+      _HelpCategory(Icons.payment_rounded, 'Pembayaran', AppColors.success),
+      _HelpCategory(Icons.local_shipping_rounded, 'Pengiriman', AppColors.secondary),
+      _HelpCategory(Icons.assignment_return_rounded, 'Pengembalian', AppColors.error),
+      _HelpCategory(Icons.account_circle_rounded, 'Akun', AppColors.accent),
+      _HelpCategory(Icons.security_rounded, 'Keamanan', AppColors.primary),
     ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Browse by Topic',
+          'Telusuri berdasarkan Topik',
           style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: AppColors.primary),
         ),
         const SizedBox(height: 14),
@@ -145,18 +145,33 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
 
   Widget _buildFaqSection() {
     const faqs = [
-      _FaqItem('How do I track my order?', 'Go to "My Orders" in your profile, find the order, and tap "Track Order". You can see real-time status updates and estimated delivery time.'),
-      _FaqItem('What is Velvoria\'s return policy?', 'We offer a 14-day return policy for all items in original condition. Luxury items are eligible for free returns with our premium shipping label.'),
-      _FaqItem('How do I verify product authenticity?', 'Every product on Velvoria comes with an authenticity certificate. You can scan the QR code on the certificate to verify with our blockchain-based verification system.'),
-      _FaqItem('How do I become a seller?', 'Go to Settings > Become a Seller. Complete the verification process including business documentation and identity verification. Approval typically takes 2-3 business days.'),
-      _FaqItem('What payment methods are accepted?', 'We accept Credit/Debit cards (Visa, Mastercard, Amex), digital wallets (GoPay, OVO, Dana), bank transfers, installment plans, and Cash on Delivery.'),
+      _FaqItem(
+        'Bagaimana cara melacak pesanan saya?',
+        'Buka "Pesanan Saya" di profil Anda, pilih pesanan, lalu ketuk "Lacak Pesanan". Anda dapat melihat status terkini dan perkiraan waktu pengiriman secara langsung.',
+      ),
+      _FaqItem(
+        'Apa kebijakan pengembalian Velvoria?',
+        'Kami menawarkan kebijakan pengembalian 14 hari untuk semua barang dalam kondisi asli. Barang mewah memenuhi syarat untuk pengembalian gratis dengan label pengiriman premium kami.',
+      ),
+      _FaqItem(
+        'Bagaimana cara memverifikasi keaslian produk?',
+        'Setiap produk di Velvoria dilengkapi sertifikat keaslian. Anda dapat memindai kode QR pada sertifikat untuk memverifikasinya melalui sistem verifikasi berbasis blockchain kami.',
+      ),
+      _FaqItem(
+        'Bagaimana cara menjadi penjual?',
+        'Buka Pengaturan > Jadi Penjual. Selesaikan proses verifikasi termasuk dokumen usaha dan verifikasi identitas. Persetujuan biasanya memakan waktu 2-3 hari kerja.',
+      ),
+      _FaqItem(
+        'Metode pembayaran apa saja yang diterima?',
+        'Kami menerima kartu Kredit/Debit (Visa, Mastercard, Amex), dompet digital (GoPay, OVO, Dana), transfer bank, cicilan, dan Bayar di Tempat (COD).',
+      ),
     ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Frequently Asked Questions',
+          'Pertanyaan yang Sering Diajukan',
           style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: AppColors.primary),
         ),
         const SizedBox(height: 14),
@@ -216,33 +231,33 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Still Need Help?',
+          'Masih Butuh Bantuan?',
           style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: AppColors.primary),
         ),
         const SizedBox(height: 14),
         _buildContactTile(
           Icons.chat_bubble_rounded,
-          'Live Chat',
-          'Chat with our support team',
+          'Obrolan Langsung',
+          'Ngobrol dengan tim dukungan kami',
           AppColors.accent,
         ),
         _buildContactTile(
           Icons.email_rounded,
-          'Email Support',
-          'support@Velvoria.com',
-          const Color(0xFF4A90D9),
+          'Dukungan Email',
+          'support@velvoria.com',
+          AppColors.info,
         ),
         _buildContactTile(
           Icons.phone_rounded,
-          'Call Us',
-          '+62 21 1234 5678 (9AM - 9PM)',
-          const Color(0xFF7FA99B),
+          'Telepon Kami',
+          '+62 21 1234 5678 (09.00 - 21.00)',
+          AppColors.success,
         ),
         _buildContactTile(
           Icons.message_rounded,
           'WhatsApp',
           '+62 812 0000 1234',
-          const Color(0xFF25D366),
+          AppColors.secondary,
         ),
       ],
     );

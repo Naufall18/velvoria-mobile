@@ -1,18 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/currency.dart';
+import '../../../../shared/widgets/cards/product_card.dart';
+import '../../../../shared/widgets/common/vv_skeleton.dart';
+import '../../../products/data/product_model.dart';
+import '../../data/wishlist_repository.dart';
 
-class WishlistPage extends StatelessWidget {
+/// The user's saved products — backed by the real /wishlist API.
+class WishlistPage extends ConsumerWidget {
   const WishlistPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final wishlistAsync = ref.watch(wishlistProvider);
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
               child: Row(
                 children: [
                   const Expanded(
@@ -22,39 +32,48 @@ class WishlistPage extends StatelessWidget {
                             fontWeight: FontWeight.w700,
                             color: AppColors.primary)),
                   ),
-                  Text('6 items',
-                      style: TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+                  wishlistAsync.maybeWhen(
+                    data: (items) => Text('${items.length} item',
+                        style: const TextStyle(
+                            fontSize: 13, color: AppColors.textSecondary)),
+                    orElse: () => const SizedBox.shrink(),
+                  ),
                 ],
               ),
             ),
-            const SizedBox(height: 12),
-            // Collection chips
-            SizedBox(
-              height: 40,
-              child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                scrollDirection: Axis.horizontal,
-                children: [
-                  _chip('All', true),
-                  _chip('Fashion', false),
-                  _chip('Watches', false),
-                  _chip('Jewelry', false),
-                  _chip('Bags', false),
-                ],
-              ),
-            ),
-            const SizedBox(height: 12),
             Expanded(
-              child: GridView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              child: wishlistAsync.when(
+                loading: () => GridView.count(
                   crossAxisCount: 2,
-                  mainAxisSpacing: 14,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  childAspectRatio: 0.62,
                   crossAxisSpacing: 14,
-                  childAspectRatio: 0.65,
+                  mainAxisSpacing: 14,
+                  children: List.generate(4,
+                      (_) => const VvProductCardSkeleton(width: double.infinity)),
                 ),
-                itemCount: 6,
-                itemBuilder: (_, i) => _wishlistCard(i),
+                error: (e, _) => _ErrorState(
+                  onRetry: () => ref.invalidate(wishlistProvider),
+                ),
+                data: (items) {
+                  if (items.isEmpty) return const _EmptyWishlist();
+                  return RefreshIndicator(
+                    onRefresh: () async => ref.invalidate(wishlistProvider),
+                    child: GridView.builder(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 14,
+                        crossAxisSpacing: 14,
+                        childAspectRatio: 0.62,
+                      ),
+                      itemCount: items.length,
+                      itemBuilder: (context, i) =>
+                          _WishlistCard(item: items[i]),
+                    ),
+                  );
+                },
               ),
             ),
           ],
@@ -62,115 +81,126 @@ class WishlistPage extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _chip(String label, bool selected) {
-    return Container(
-      margin: const EdgeInsets.only(right: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        color: selected ? AppColors.primary : Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-            color: selected ? AppColors.primary : AppColors.grey300),
-      ),
-      child: Center(
-        child: Text(label,
-            style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: selected ? Colors.white : AppColors.grey700)),
+class _WishlistCard extends ConsumerStatefulWidget {
+  const _WishlistCard({required this.item});
+  final WishlistItem item;
+
+  @override
+  ConsumerState<_WishlistCard> createState() => _WishlistCardState();
+}
+
+class _WishlistCardState extends ConsumerState<_WishlistCard> {
+  bool _removing = false;
+
+  Future<void> _remove() async {
+    setState(() => _removing = true);
+    try {
+      await ref.read(wishlistRepositoryProvider).remove(widget.item.id);
+      ref.invalidate(wishlistProvider);
+    } catch (_) {
+      if (mounted) {
+        setState(() => _removing = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Gagal menghapus dari wishlist')),
+        );
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final Product p = widget.item.product;
+    final hasDiscount = p.comparePrice != null && p.comparePrice! > p.price;
+    final pct = hasDiscount
+        ? (((p.comparePrice! - p.price) / p.comparePrice!) * 100).round()
+        : 0;
+    return Stack(
+      children: [
+        ProductCard(
+          name: p.name,
+          brand: p.brandName ?? p.vendorName ?? 'Velvoria',
+          price: Currency.idr(p.price),
+          originalPrice: hasDiscount ? Currency.idr(p.comparePrice!) : null,
+          rating: p.rating,
+          reviewCount: p.totalReviews,
+          icon: Icons.shopping_bag_rounded,
+          imageUrl: p.imageUrl,
+          discountLabel: hasDiscount ? '-$pct%' : null,
+          width: double.infinity,
+          onTap: () => context
+              .pushNamed('productDetail', pathParameters: {'slug': p.slug}),
+        ),
+        Positioned(
+          top: 8,
+          right: 8,
+          child: GestureDetector(
+            onTap: _removing ? null : _remove,
+            child: Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.08),
+                      blurRadius: 6),
+                ],
+              ),
+              child: _removing
+                  ? const Padding(
+                      padding: EdgeInsets.all(8),
+                      child: CircularProgressIndicator(
+                          strokeWidth: 2, color: AppColors.error),
+                    )
+                  : const Icon(Icons.favorite_rounded,
+                      size: 18, color: AppColors.error),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _EmptyWishlist extends StatelessWidget {
+  const _EmptyWishlist();
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.favorite_border_rounded,
+              size: 64, color: AppColors.grey400),
+          SizedBox(height: 12),
+          Text('Wishlist Anda masih kosong',
+              style: TextStyle(color: AppColors.textSecondary)),
+          SizedBox(height: 4),
+          Text('Simpan produk favorit untuk nanti',
+              style: TextStyle(color: AppColors.grey400, fontSize: 12)),
+        ],
       ),
     );
   }
+}
 
-  Widget _wishlistCard(int i) {
-    final names = ['Classic Leather Bag', 'Diamond Watch', 'Silk Scarf', 'Gold Necklace', 'Designer Sunglasses', 'Pearl Earrings'];
-    final prices = ['\$1,299', '\$4,500', '\$380', '\$2,100', '\$650', '\$890'];
-    final icons = [Icons.luggage_rounded, Icons.watch_rounded, Icons.checkroom_rounded, Icons.diamond_rounded, Icons.visibility_rounded, Icons.diamond_outlined];
-    final hasDiscount = i == 1 || i == 4;
-    final inStock = i != 3;
+class _ErrorState extends StatelessWidget {
+  const _ErrorState({required this.onRetry});
+  final VoidCallback onRetry;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 4))
-        ],
-      ),
+  @override
+  Widget build(BuildContext context) {
+    return Center(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Image
-          Container(
-            height: 140,
-            decoration: BoxDecoration(
-              color: AppColors.grey100,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-            ),
-            child: Stack(
-              children: [
-                Center(child: Icon(icons[i], size: 48, color: AppColors.grey400)),
-                Positioned(
-                  top: 8, right: 8,
-                  child: Container(
-                    width: 32, height: 32,
-                    decoration: BoxDecoration(color: AppColors.error.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
-                    child: const Icon(Icons.favorite_rounded, size: 18, color: AppColors.error),
-                  ),
-                ),
-                if (hasDiscount)
-                  Positioned(
-                    top: 8, left: 8,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                      decoration: BoxDecoration(color: AppColors.error, borderRadius: BorderRadius.circular(6)),
-                      child: const Text('Price Drop!', style: TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.w600)),
-                    ),
-                  ),
-                if (!inStock)
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.5),
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-                    ),
-                    child: const Center(
-                      child: Text('Out of Stock', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600)),
-                    ),
-                  ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10, 10, 10, 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('LUXE BRAND', style: TextStyle(fontSize: 9, fontWeight: FontWeight.w600, color: AppColors.accent, letterSpacing: 0.5)),
-                const SizedBox(height: 2),
-                Text(names[i], maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
-                const SizedBox(height: 4),
-                Text(prices[i], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.primary)),
-                const SizedBox(height: 8),
-                // Add to cart button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: inStock ? () {} : null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      foregroundColor: Colors.white,
-                      disabledBackgroundColor: AppColors.grey300,
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                      elevation: 0,
-                    ),
-                    child: Text(inStock ? 'Add to Cart' : 'Notify Me', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          const Icon(Icons.error_outline, size: 48, color: AppColors.error),
+          const SizedBox(height: 8),
+          const Text('Gagal memuat wishlist'),
+          TextButton(onPressed: onRetry, child: const Text('Coba lagi')),
         ],
       ),
     );

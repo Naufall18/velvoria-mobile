@@ -14,12 +14,14 @@ class ProductRepository {
   ProductRepository(this._api);
 
   /// GET /products → paginated; products live at data.data[].
-  Future<List<Product>> fetchProducts({String? search}) async {
+  Future<List<Product>> fetchProducts({String? search, int? categoryId}) async {
     try {
       final res = await _api.get(
         '/products',
         queryParameters: {
           if (search != null && search.isNotEmpty) 'search': search,
+          if (categoryId != null) 'category_id': categoryId,
+          'per_page': 50,
         },
       );
       final list = (res.data['data']?['data'] as List?) ?? const [];
@@ -65,6 +67,12 @@ class ProductRepository {
 final productsProvider =
     FutureProvider.family<List<Product>, String?>((ref, search) async {
   return ref.watch(productRepositoryProvider).fetchProducts(search: search);
+});
+
+/// Active products belonging to a single category (for the Categories tab).
+final productsByCategoryProvider =
+    FutureProvider.family<List<Product>, int>((ref, categoryId) async {
+  return ref.watch(productRepositoryProvider).fetchProducts(categoryId: categoryId);
 });
 
 /// Featured products for the home screen.

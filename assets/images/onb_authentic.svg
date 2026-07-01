@@ -1,0 +1,37 @@
+<svg width="320" height="300" viewBox="0 0 320 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="a_seal" x1="112" y1="70" x2="208" y2="196" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3A7570"/>
+      <stop offset="1" stop-color="#254F4D"/>
+    </linearGradient>
+    <linearGradient id="a_gold" x1="130" y1="90" x2="190" y2="180" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E7CB9B"/>
+      <stop offset="1" stop-color="#C5A572"/>
+    </linearGradient>
+  </defs>
+  <!-- ground shadow -->
+  <ellipse cx="160" cy="262" rx="86" ry="11" fill="#1A1F3A" fill-opacity="0.07"/>
+  <!-- ribbon tails -->
+  <path d="M138 176 L120 250 L146 232 L160 262 L160 190 Z" fill="#2D5F5D"/>
+  <path d="M182 176 L200 250 L174 232 L160 262 L160 190 Z" fill="#22463F"/>
+  <!-- scalloped seal (12 bumps) -->
+  <g>
+    <circle cx="160" cy="130" r="64" fill="url(#a_seal)"/>
+    <g fill="url(#a_seal)">
+      <circle cx="160" cy="60" r="12"/><circle cx="195" cy="69" r="12"/><circle cx="221" cy="95" r="12"/>
+      <circle cx="230" cy="130" r="12"/><circle cx="221" cy="165" r="12"/><circle cx="195" cy="191" r="12"/>
+      <circle cx="160" cy="200" r="12"/><circle cx="125" cy="191" r="12"/><circle cx="99" cy="165" r="12"/>
+      <circle cx="90" cy="130" r="12"/><circle cx="99" cy="95" r="12"/><circle cx="125" cy="69" r="12"/>
+    </g>
+  </g>
+  <!-- gold ring -->
+  <circle cx="160" cy="130" r="52" fill="none" stroke="url(#a_gold)" stroke-width="3" stroke-opacity="0.9"/>
+  <!-- inner disc -->
+  <circle cx="160" cy="130" r="44" fill="#F6F3EC"/>
+  <!-- checkmark -->
+  <path d="M139 131 L154 147 L184 113" stroke="#2D5F5D" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- sparkles -->
+  <path d="M248 78 l3 10 10 3 -10 3 -3 10 -3 -10 -10 -3 10 -3 Z" fill="#C5A572"/>
+  <circle cx="70" cy="96" r="4.5" fill="#2D5F5D" fill-opacity="0.6"/>
+  <circle cx="252" cy="180" r="4" fill="#C5A572"/>
+</svg>

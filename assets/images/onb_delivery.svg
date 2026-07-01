@@ -1,0 +1,37 @@
+<svg width="320" height="300" viewBox="0 0 320 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="v_box" x1="120" y1="120" x2="210" y2="230" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A23244"/>
+      <stop offset="1" stop-color="#7C2434"/>
+    </linearGradient>
+    <linearGradient id="v_shield" x1="196" y1="86" x2="252" y2="150" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3A7570"/>
+      <stop offset="1" stop-color="#254F4D"/>
+    </linearGradient>
+    <linearGradient id="v_gold" x1="120" y1="150" x2="200" y2="180" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E7CB9B"/>
+      <stop offset="1" stop-color="#C5A572"/>
+    </linearGradient>
+  </defs>
+  <!-- ground shadow -->
+  <ellipse cx="164" cy="256" rx="90" ry="12" fill="#1A1F3A" fill-opacity="0.07"/>
+  <!-- speed lines -->
+  <path d="M40 150 H96" stroke="#C5A572" stroke-width="6" stroke-linecap="round" stroke-opacity="0.9"/>
+  <path d="M30 178 H80" stroke="#E8B4A0" stroke-width="6" stroke-linecap="round" stroke-opacity="0.8"/>
+  <path d="M46 206 H92" stroke="#C5A572" stroke-width="6" stroke-linecap="round" stroke-opacity="0.6"/>
+  <!-- box lid (top) -->
+  <path d="M116 128 L204 128 L224 150 L96 150 Z" fill="#B94A5A"/>
+  <!-- box body -->
+  <path d="M96 150 H224 V236 a6 6 0 0 1 -6 6 H102 a6 6 0 0 1 -6 -6 Z" fill="url(#v_box)"/>
+  <!-- gold tape -->
+  <rect x="150" y="150" width="20" height="92" fill="url(#v_gold)"/>
+  <path d="M150 128 L170 128 L160 150 Z" fill="#D9AF7A"/>
+  <!-- shield check badge -->
+  <g>
+    <path d="M224 84 L256 96 V128 C256 150 240 162 224 170 C208 162 192 150 192 128 V96 Z" fill="url(#v_shield)"/>
+    <path d="M212 128 L221 138 L238 116" stroke="#F6F3EC" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </g>
+  <!-- sparkles -->
+  <path d="M92 92 l2.5 9 9 2.5 -9 2.5 -2.5 9 -2.5 -9 -9 -2.5 9 -2.5 Z" fill="#C5A572"/>
+  <circle cx="256" cy="196" r="4" fill="#E8B4A0"/>
+</svg>

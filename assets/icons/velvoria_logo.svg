@@ -1,0 +1,23 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="goldL" x1="55" y1="52" x2="100" y2="150" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F0D9AE"/>
+      <stop offset="1" stop-color="#C5A572"/>
+    </linearGradient>
+    <linearGradient id="goldR" x1="145" y1="52" x2="100" y2="150" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#C9A56E"/>
+      <stop offset="1" stop-color="#9C7B49"/>
+    </linearGradient>
+    <linearGradient id="spark" x1="150" y1="46" x2="164" y2="74" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FBEFD8"/>
+      <stop offset="1" stop-color="#E8B4A0"/>
+    </linearGradient>
+  </defs>
+  <!-- V as a faceted gem: left facet (light) + right facet (deep) -->
+  <path d="M52 52 L74 52 L100 122 L100 154 Z" fill="url(#goldL)"/>
+  <path d="M148 52 L126 52 L100 122 L100 154 Z" fill="url(#goldR)"/>
+  <!-- centre seam highlight -->
+  <path d="M100 122 L100 154" stroke="#FBEFD8" stroke-width="1.5" stroke-opacity="0.5"/>
+  <!-- champagne sparkle -->
+  <path d="M157 44 L161 60 L177 64 L161 68 L157 84 L153 68 L137 64 L153 60 Z" fill="url(#spark)"/>
+</svg>

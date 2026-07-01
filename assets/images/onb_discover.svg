@@ -1,0 +1,37 @@
+<svg width="320" height="300" viewBox="0 0 320 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="d_bag" x1="95" y1="120" x2="225" y2="258" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#252C4E"/>
+      <stop offset="1" stop-color="#141830"/>
+    </linearGradient>
+    <linearGradient id="d_gem" x1="228" y1="70" x2="272" y2="126" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F1D2C4"/>
+      <stop offset="1" stop-color="#E8B4A0"/>
+    </linearGradient>
+    <linearGradient id="d_gold" x1="120" y1="86" x2="200" y2="130" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E7CB9B"/>
+      <stop offset="1" stop-color="#C5A572"/>
+    </linearGradient>
+  </defs>
+  <!-- ground shadow -->
+  <ellipse cx="160" cy="266" rx="92" ry="12" fill="#1A1F3A" fill-opacity="0.07"/>
+  <!-- handle -->
+  <path d="M120 128 C120 82 200 82 200 128" stroke="url(#d_gold)" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <!-- bag body -->
+  <path d="M96 122 H224 a10 10 0 0 1 10 10 l-8 108 a16 16 0 0 1 -16 14 H110 a16 16 0 0 1 -16 -14 l-8 -108 a10 10 0 0 1 10 -10 Z" fill="url(#d_bag)"/>
+  <!-- top flap sheen -->
+  <path d="M92 122 H228 a8 8 0 0 1 8 9 l-1 12 H85 l-1 -12 a8 8 0 0 1 8 -9 Z" fill="#2E365C"/>
+  <!-- gold V emblem on bag -->
+  <path d="M128 168 L142 168 L160 214 L160 232 Z" fill="url(#d_gold)"/>
+  <path d="M192 168 L178 168 L160 214 L160 232 Z" fill="#C5A572"/>
+  <!-- floating diamond -->
+  <g>
+    <path d="M250 74 L272 96 L250 128 L228 96 Z" fill="url(#d_gem)"/>
+    <path d="M228 96 H272 L250 74 Z" fill="#F6E0D6"/>
+    <path d="M250 74 L250 128" stroke="#C98A76" stroke-width="1" stroke-opacity="0.5"/>
+  </g>
+  <!-- sparkles -->
+  <path d="M64 96 l3 10 10 3 -10 3 -3 10 -3 -10 -10 -3 10 -3 Z" fill="#C5A572"/>
+  <path d="M210 250 l2.5 8 8 2.5 -8 2.5 -2.5 8 -2.5 -8 -8 -2.5 8 -2.5 Z" fill="#E8B4A0"/>
+  <circle cx="86" cy="180" r="4" fill="#E8B4A0" fill-opacity="0.8"/>
+</svg>

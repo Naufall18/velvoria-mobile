@@ -1,0 +1,18 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+    <!-- V left facet -->
+    <path
+        android:pathData="M52,52 L74,52 L100,122 L100,154 Z"
+        android:fillColor="#E7CB9B" />
+    <!-- V right facet -->
+    <path
+        android:pathData="M148,52 L126,52 L100,122 L100,154 Z"
+        android:fillColor="#C5A572" />
+    <!-- champagne sparkle -->
+    <path
+        android:pathData="M157,44 L161,60 L177,64 L161,68 L157,84 L153,68 L137,64 L153,60 Z"
+        android:fillColor="#F1D2C4" />
+</vector>

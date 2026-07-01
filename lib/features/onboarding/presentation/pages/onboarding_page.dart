@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 
@@ -22,22 +23,22 @@ class _OnboardingPageState extends State<OnboardingPage>
 
   static const List<_OnbSlide> _slides = [
     _OnbSlide(
-      Icons.diamond_rounded,
+      'assets/images/onb_discover.svg',
       Icons.auto_awesome_rounded,
       'Temukan Kemewahan',
       'Jelajahi koleksi pilihan dari brand premium ternama di seluruh dunia — semua dalam satu aplikasi.',
       AppColors.primary,
     ),
     _OnbSlide(
-      Icons.verified_rounded,
+      'assets/images/onb_authentic.svg',
       Icons.workspace_premium_rounded,
       '100% Autentik',
       'Setiap produk melewati verifikasi keaslian dan kontrol kualitas sebelum sampai ke tangan Anda.',
       AppColors.accent,
     ),
     _OnbSlide(
-      Icons.local_shipping_rounded,
-      Icons.shield_rounded,
+      'assets/images/onb_delivery.svg',
+      Icons.bolt_rounded,
       'Cepat & Aman',
       'Pengiriman premium dengan asuransi penuh dan pelacakan real-time hingga depan pintu Anda.',
       AppColors.error,
@@ -196,8 +197,11 @@ class _OnboardingPageState extends State<OnboardingPage>
       ),
       child: Stack(
         children: [
-          Center(
-            child: Icon(slide.icon, size: 116, color: slide.color),
+          Padding(
+            padding: const EdgeInsets.all(30),
+            child: Center(
+              child: SvgPicture.asset(slide.image, fit: BoxFit.contain),
+            ),
           ),
           Positioned(
             left: 20,
@@ -272,11 +276,11 @@ class _OnboardingPageState extends State<OnboardingPage>
 }
 
 class _OnbSlide {
-  final IconData icon;
+  final String image;
   final IconData badge;
   final String title;
   final String subtitle;
   final Color color;
   const _OnbSlide(
-      this.icon, this.badge, this.title, this.subtitle, this.color);
+      this.image, this.badge, this.title, this.subtitle, this.color);
 }

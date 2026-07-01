@@ -1,8 +1,11 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 
-/// Onboarding screen shown to first-time users.
+/// First-run onboarding — floating illustration cards with a parallax page
+/// transition, matching the Velvoria luxury identity.
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
 
@@ -10,182 +13,256 @@ class OnboardingPage extends StatefulWidget {
   State<OnboardingPage> createState() => _OnboardingPageState();
 }
 
-class _OnboardingPageState extends State<OnboardingPage> {
-  final _controller = PageController();
+class _OnboardingPageState extends State<OnboardingPage>
+    with SingleTickerProviderStateMixin {
+  final PageController _controller = PageController();
+  late final AnimationController _float;
+  double _page = 0;
   int _currentPage = 0;
 
-  static const _pages = [
-    _OnboardingData(
-      icon: Icons.diamond_rounded,
-      title: 'Temukan Kemewahan',
-      subtitle: 'Jelajahi koleksi pilihan dari\nbrand premium di seluruh dunia',
-      gradient: [AppColors.primary, AppColors.grey800],
+  static const List<_OnbSlide> _slides = [
+    _OnbSlide(
+      Icons.diamond_rounded,
+      Icons.auto_awesome_rounded,
+      'Temukan Kemewahan',
+      'Jelajahi koleksi pilihan dari brand premium ternama di seluruh dunia — semua dalam satu aplikasi.',
+      AppColors.primary,
     ),
-    _OnboardingData(
-      icon: Icons.verified_rounded,
-      title: '100% Asli',
-      subtitle: 'Setiap produk diverifikasi\nkeaslian dan kualitasnya',
-      gradient: [AppColors.accent, AppColors.primary],
+    _OnbSlide(
+      Icons.verified_rounded,
+      Icons.workspace_premium_rounded,
+      '100% Autentik',
+      'Setiap produk melewati verifikasi keaslian dan kontrol kualitas sebelum sampai ke tangan Anda.',
+      AppColors.accent,
     ),
-    _OnboardingData(
-      icon: Icons.local_shipping_rounded,
-      title: 'Cepat & Aman',
-      subtitle: 'Pengiriman premium dengan\nasuransi dan pelacakan penuh',
-      gradient: [AppColors.error, AppColors.secondary],
+    _OnbSlide(
+      Icons.local_shipping_rounded,
+      Icons.shield_rounded,
+      'Cepat & Aman',
+      'Pengiriman premium dengan asuransi penuh dan pelacakan real-time hingga depan pintu Anda.',
+      AppColors.error,
     ),
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _controller.addListener(() {
+      if (!mounted) return;
+      setState(() => _page = _controller.page ?? 0);
+    });
+    _float = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 3),
+    )..repeat(reverse: true);
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
+    _float.dispose();
     super.dispose();
   }
 
-  void _onNext() {
-    if (_currentPage < _pages.length - 1) {
-      _controller.nextPage(
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeInOut,
-      );
-    } else {
+  bool get _isLast => _currentPage == _slides.length - 1;
+
+  void _next() {
+    if (_isLast) {
       context.go('/login');
+    } else {
+      _controller.nextPage(
+        duration: const Duration(milliseconds: 350),
+        curve: Curves.easeInOutCubic,
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final activeColor = _slides[_currentPage].color;
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
           children: [
-            // Skip button
             Align(
-              alignment: Alignment.topRight,
-              child: TextButton(
-                onPressed: () => context.go('/login'),
-                child: const Text(
-                  'Lewati',
-                  style: TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ),
-
-            // Page content
-            Expanded(
-              child: PageView.builder(
-                controller: _controller,
-                onPageChanged: (i) => setState(() => _currentPage = i),
-                itemCount: _pages.length,
-                itemBuilder: (_, i) => _buildPage(_pages[i]),
-              ),
-            ),
-
-            // Page indicators
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  _pages.length,
-                  (i) => AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    width: _currentPage == i ? 28 : 8,
-                    height: 8,
-                    decoration: BoxDecoration(
-                      color: _currentPage == i
-                          ? AppColors.primary
-                          : AppColors.grey300,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-            // Action button
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
-              child: SizedBox(
-                width: double.infinity,
-                height: 54,
-                child: ElevatedButton(
-                  onPressed: _onNext,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    elevation: 0,
-                  ),
-                  child: Text(
-                    _currentPage == _pages.length - 1
-                        ? 'Mulai'
-                        : 'Lanjut',
-                    style: const TextStyle(
-                      fontSize: 16,
+              alignment: Alignment.centerRight,
+              child: AnimatedOpacity(
+                opacity: _isLast ? 0 : 1,
+                duration: const Duration(milliseconds: 250),
+                child: TextButton(
+                  onPressed: _isLast ? null : () => context.go('/login'),
+                  child: const Text(
+                    'Lewati',
+                    style: TextStyle(
+                      color: AppColors.textSecondary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
               ),
             ),
+            Expanded(
+              child: PageView.builder(
+                controller: _controller,
+                onPageChanged: (i) => setState(() => _currentPage = i),
+                itemCount: _slides.length,
+                itemBuilder: (context, index) {
+                  final slide = _slides[index];
+                  final delta = index - _page;
+                  final t = (1 - delta.abs()).clamp(0.0, 1.0);
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        AnimatedBuilder(
+                          animation: _float,
+                          builder: (context, child) {
+                            final dy =
+                                math.sin(_float.value * math.pi * 2) * 8;
+                            return Transform.translate(
+                              offset: Offset(delta * 48, dy),
+                              child: child,
+                            );
+                          },
+                          child: _illustration(slide),
+                        ),
+                        const SizedBox(height: 44),
+                        Opacity(
+                          opacity: t,
+                          child: Transform.translate(
+                            offset: Offset(0, (1 - t) * 24),
+                            child: Column(
+                              children: [
+                                Text(
+                                  slide.title,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontSize: 26,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.primary,
+                                    height: 1.2,
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                Text(
+                                  slide.subtitle,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    color: AppColors.textSecondary,
+                                    height: 1.6,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+            _bottomBar(activeColor),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildPage(_OnboardingData data) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+  Widget _illustration(_OnbSlide slide) {
+    const radius = BorderRadius.only(
+      topLeft: Radius.circular(28),
+      topRight: Radius.circular(72),
+      bottomLeft: Radius.circular(72),
+      bottomRight: Radius.circular(28),
+    );
+    return Container(
+      width: 280,
+      height: 280,
+      decoration: BoxDecoration(
+        color: slide.color.withValues(alpha: 0.10),
+        borderRadius: radius,
+        boxShadow: [
+          BoxShadow(
+            color: slide.color.withValues(alpha: 0.18),
+            blurRadius: 30,
+            offset: const Offset(0, 16),
+          ),
+        ],
+      ),
+      child: Stack(
         children: [
-          // Icon container
-          Container(
-            width: 160,
-            height: 160,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: data.gradient,
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+          Center(
+            child: Icon(slide.icon, size: 116, color: slide.color),
+          ),
+          Positioned(
+            left: 20,
+            bottom: 20,
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.08),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
-              borderRadius: BorderRadius.circular(40),
-              boxShadow: [
-                BoxShadow(
-                  color: data.gradient[0].withValues(alpha: 0.3),
-                  blurRadius: 30,
-                  offset: const Offset(0, 12),
+              child: Icon(slide.badge, color: slide.color, size: 22),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _bottomBar(Color activeColor) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(32, 0, 32, 28),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(_slides.length, (i) {
+              final active = i == _currentPage;
+              return AnimatedContainer(
+                duration: const Duration(milliseconds: 250),
+                margin: const EdgeInsets.symmetric(horizontal: 4),
+                width: active ? 28 : 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  color: active ? activeColor : AppColors.grey300,
+                  borderRadius: BorderRadius.circular(4),
                 ),
-              ],
-            ),
-            child: Icon(data.icon, size: 72, color: Colors.white),
+              );
+            }),
           ),
-          const SizedBox(height: 48),
-          Text(
-            data.title,
-            style: const TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.w700,
-              color: AppColors.primary,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            data.subtitle,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 15,
-              color: AppColors.textSecondary,
-              height: 1.6,
+          const SizedBox(height: 24),
+          SizedBox(
+            width: double.infinity,
+            height: 54,
+            child: ElevatedButton(
+              onPressed: _next,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: activeColor,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+              child: Text(
+                _isLast ? 'Mulai Sekarang' : 'Lanjut',
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
             ),
           ),
         ],
@@ -194,17 +271,12 @@ class _OnboardingPageState extends State<OnboardingPage> {
   }
 }
 
-/// Internal data model for onboarding slides.
-class _OnboardingData {
+class _OnbSlide {
   final IconData icon;
+  final IconData badge;
   final String title;
   final String subtitle;
-  final List<Color> gradient;
-
-  const _OnboardingData({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.gradient,
-  });
+  final Color color;
+  const _OnbSlide(
+      this.icon, this.badge, this.title, this.subtitle, this.color);
 }

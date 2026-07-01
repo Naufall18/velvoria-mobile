@@ -148,15 +148,16 @@ class HomePage extends ConsumerWidget {
       ('Perhiasan', Icons.diamond_rounded),
     ];
     return SizedBox(
-      height: 96,
+      height: 110,
       child: ListView.separated(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         scrollDirection: Axis.horizontal,
         itemCount: cats.length,
         separatorBuilder: (_, __) => const SizedBox(width: 16),
         itemBuilder: (context, i) => GestureDetector(
           onTap: () => context.pushNamed('products'),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Container(
                 width: 54, height: 54,

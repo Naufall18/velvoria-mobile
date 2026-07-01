@@ -57,11 +57,12 @@ class ProductCard extends StatelessWidget {
           ],
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildImageSection(),
-            Flexible(child: _buildInfoSection()),
+            // Image flexes to fill whatever height the cell/row provides so the
+            // card never overflows on smaller/denser screens.
+            Expanded(child: _buildImageSection()),
+            _buildInfoSection(),
           ],
         ),
       ),
@@ -70,7 +71,6 @@ class ProductCard extends StatelessWidget {
 
   Widget _buildImageSection() {
     return SizedBox(
-      height: 150,
       width: double.infinity,
       child: Stack(
         fit: StackFit.expand,

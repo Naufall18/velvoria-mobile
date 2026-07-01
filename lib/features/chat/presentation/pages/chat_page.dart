@@ -91,10 +91,12 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
         title: Row(children: [
           CircleAvatar(radius: 18, backgroundColor: AppColors.primary.withValues(alpha: 0.1), child: Text(widget.sellerName[0], style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold))),
           const SizedBox(width: 10),
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(widget.sellerName, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
-            const Text('Online', style: TextStyle(fontSize: 11, color: AppColors.success)),
-          ]),
+          Expanded(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(widget.sellerName, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+              const Text('Online', style: TextStyle(fontSize: 11, color: AppColors.success)),
+            ]),
+          ),
         ]),
         actions: [
           IconButton(icon: const Icon(Icons.phone_outlined, color: AppColors.textPrimary), onPressed: () {}),

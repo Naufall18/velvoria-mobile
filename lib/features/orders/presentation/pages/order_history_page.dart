@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:velvoria/core/theme/app_colors.dart';
 import 'package:velvoria/core/utils/currency.dart';
 import '../../data/order_model.dart';
@@ -119,7 +120,10 @@ class _OrderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (label, color) = _statusStyle(order.status);
-    return Container(
+    return GestureDetector(
+      onTap: () =>
+          context.pushNamed('orderTracking', extra: order.orderNumber),
+      child: Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -177,6 +181,7 @@ class _OrderCard extends StatelessWidget {
             ],
           ),
         ],
+      ),
       ),
     );
   }

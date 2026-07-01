@@ -78,7 +78,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/order-tracking',
         name: 'orderTracking',
-        builder: (context, state) => const OrderTrackingPage(),
+        builder: (context, state) => OrderTrackingPage(
+          orderId: state.extra as String? ?? 'VLV-00000',
+        ),
       ),
       GoRoute(
         path: '/order-history',

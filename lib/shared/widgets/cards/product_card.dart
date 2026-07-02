@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme/app_colors.dart';
 
 /// Reusable product card mewah dipakai di Home, Search, Wishlist, dll.
@@ -146,16 +147,35 @@ class ProductCard extends StatelessWidget {
           // Hairline emas signature
           Container(width: 28, height: 2, color: _gold),
           const SizedBox(height: 8),
-          Text(
-            brand.toUpperCase(),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              fontSize: 9,
-              fontWeight: FontWeight.w700,
-              color: AppColors.accent,
-              letterSpacing: 0.6,
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  brand.toUpperCase(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 9,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.accent,
+                    letterSpacing: 0.6,
+                  ),
+                ),
+              ),
+              // Seal autentikasi signature: "ASLI" mono + perisai
+              Icon(Icons.verified_user_rounded,
+                  size: 10, color: AppColors.accent.withValues(alpha: 0.8)),
+              const SizedBox(width: 2),
+              Text(
+                'ASLI',
+                style: GoogleFonts.jetBrainsMono(
+                  fontSize: 8,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: 0.8,
+                  color: AppColors.accent.withValues(alpha: 0.8),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 3),
           Text(
@@ -172,9 +192,9 @@ class ProductCard extends StatelessWidget {
                   price,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
+                  style: GoogleFonts.jetBrainsMono(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
                     color: AppColors.primary,
                   ),
                 ),
@@ -183,7 +203,7 @@ class ProductCard extends StatelessWidget {
                 const SizedBox(width: 4),
                 Text(
                   originalPrice!,
-                  style: const TextStyle(
+                  style: GoogleFonts.jetBrainsMono(
                     fontSize: 10,
                     color: AppColors.grey500,
                     decoration: TextDecoration.lineThrough,

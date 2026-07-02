@@ -8,11 +8,11 @@ class ChatListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final chats = [
-      {'name': 'LUXE Official Store', 'msg': 'Pesanan Anda sudah dikemas! 📦', 'time': '2m', 'unread': 2, 'online': true},
-      {'name': 'Gucci Boutique', 'msg': 'Ya, kami punya ukuran M yang tersedia', 'time': '1j', 'unread': 0, 'online': true},
-      {'name': 'Hermès Gallery', 'msg': 'Terima kasih atas pembelian Anda!', 'time': '3j', 'unread': 0, 'online': false},
+      {'name': 'Velvoria Official Store', 'msg': 'Pesanan Anda sudah dikemas! 📦', 'time': '2m', 'unread': 2, 'online': true},
+      {'name': 'Aurelia Boutique', 'msg': 'Ya, kami punya ukuran M yang tersedia', 'time': '1j', 'unread': 0, 'online': true},
+      {'name': 'Maison Vela Gallery', 'msg': 'Terima kasih atas pembelian Anda!', 'time': '3j', 'unread': 0, 'online': false},
       {'name': 'Dukungan Pelanggan', 'msg': 'Ada lagi yang bisa kami bantu?', 'time': '1h', 'unread': 1, 'online': true},
-      {'name': 'Prada Store', 'msg': 'Barang akan tersedia lagi minggu depan', 'time': '2h', 'unread': 0, 'online': false},
+      {'name': 'Noir & Co Store', 'msg': 'Barang akan tersedia lagi minggu depan', 'time': '2h', 'unread': 0, 'online': false},
     ];
 
     return Scaffold(

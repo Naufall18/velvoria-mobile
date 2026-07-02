@@ -8,15 +8,15 @@ class LiveShoppingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final liveNow = [
-      {'host': 'LUXE Official', 'title': 'Peluncuran Koleksi Musim Panas 🔥', 'viewers': '2.4K', 'products': 12},
-      {'host': 'Gucci Boutique', 'title': 'Pameran Tas Eksklusif', 'viewers': '1.8K', 'products': 8},
-      {'host': 'Hermès Gallery', 'title': 'Sesi Padu Padan Syal', 'viewers': '956', 'products': 15},
+      {'host': 'Velvoria Official', 'title': 'Peluncuran Koleksi Musim Panas 🔥', 'viewers': '2.4K', 'products': 12},
+      {'host': 'Aurelia Boutique', 'title': 'Pameran Tas Eksklusif', 'viewers': '1.8K', 'products': 8},
+      {'host': 'Maison Vela Gallery', 'title': 'Sesi Padu Padan Syal', 'viewers': '956', 'products': 15},
     ];
 
     final upcoming = [
-      {'host': 'Prada Store', 'title': 'Pratinjau Musim Baru', 'time': 'Hari ini, 20.00', 'reminder': false},
-      {'host': 'Dior Official', 'title': 'Kelas Master Kecantikan', 'time': 'Besok, 15.00', 'reminder': true},
-      {'host': 'Chanel Boutique', 'title': 'Koleksi Perhiasan', 'time': '30 Mei, 19.00', 'reminder': false},
+      {'host': 'Noir & Co Store', 'title': 'Pratinjau Musim Baru', 'time': 'Hari ini, 20.00', 'reminder': false},
+      {'host': 'Lumen Official', 'title': 'Kelas Master Kecantikan', 'time': 'Besok, 15.00', 'reminder': true},
+      {'host': 'Velour Boutique', 'title': 'Koleksi Perhiasan', 'time': '30 Mei, 19.00', 'reminder': false},
     ];
 
     return Scaffold(

@@ -84,7 +84,7 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'CARTIER',
+                  'NOIR & CO',
                   style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
@@ -94,7 +94,7 @@ class _WriteReviewPageState extends State<WriteReviewPage> {
                 ),
                 SizedBox(height: 4),
                 Text(
-                  'Santos de Cartier Watch',
+                  'Noir Minimalist Watch',
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                 ),
                 SizedBox(height: 2),

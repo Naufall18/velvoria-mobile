@@ -5,3 +5,5 @@
 - 2026-07-19: riset package photo_view untuk zoom galeri detail produk.
 
 - 2026-07-19: bandingkan photo_view vs interactive_viewer bawaan — cenderung ke InteractiveViewer, tanpa dependency tambahan.
+
+- 2026-07-20: prototipe InteractiveViewer di detail produk — pinch zoom oke

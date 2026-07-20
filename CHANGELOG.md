@@ -11,3 +11,4 @@ Catatan perubahan penting velvoria-mobile (Flutter).
 - Skeleton loading untuk list produk
 - Sinkron badge keranjang dengan API
 - Prototipe zoom galeri dengan InteractiveViewer (2026-07-20)
+- Rencana shimmer skeleton terdokumentasi (2026-07-20)

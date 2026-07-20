@@ -7,3 +7,5 @@
 - 2026-07-19: bandingkan photo_view vs interactive_viewer bawaan — cenderung ke InteractiveViewer, tanpa dependency tambahan.
 
 - 2026-07-20: prototipe InteractiveViewer di detail produk — pinch zoom oke
+
+- 2026-07-20: rencana skeleton loading: shimmer di list produk & detail
